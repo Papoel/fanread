@@ -1,0 +1,95 @@
+services:
+
+  ######################## Postgres ##########################
+  # database:
+  #   image: postgres
+  #   platform: linux/x86_64
+  #   container_name: database_fanread
+  #   restart: always
+  #   volumes:
+  #     - database_data:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: db_fanread
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - adminer_network
+  ######################## Postgres ##########################
+
+  ######################## Adminer (Postgres) ##########################
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer_fanread
+  #   restart: always
+  #   environment:
+  #     ADMINER_DEFAULT_SYSTEM: PostegreSQL
+  #     ADMINER_DEFAULT_SERVER: database_fanread
+  #     ADMINER_DEFAULT_USERNAME: user
+  #     ADMINER_DEFAULT_PASSWORD: password
+  #     ADMINER_DEFAULT_DATABASE: db_fanread
+  #     # ADMINER_DESIGN: pepa-linha | rmsoft | konya | dracula | pokorny
+  #     ADMINER_DESIGN: dracula
+  #     ADMINER_PLUGINS: tables-filter
+  #   depends_on:
+  #     - database
+  #   ports:
+  #     - "8085:8080"
+  #   networks:
+  #     - adminer_network
+  ######################## Adminer Postgres ##########################
+
+  ######################## MariaDb (MySQL) ##########################
+  database:
+    image: mariadb:12.2.2
+    platform: linux/x86_64
+    container_name: db_fanread
+    restart: always
+    volumes:
+      - database_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: db_fanread
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - database_network
+    ports:
+      - "3306:3306"
+  ######################## MariaDb (MySQL) ##########################
+
+  ########################### phpMyAdmin ############################
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpMyAdmin_fanread
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - "8085:80"
+    environment:
+      PMA_HOST: database
+    networks:
+      - database_network
+  ########################### phpMyAdmin ############################
+
+  ############################# MailDev #############################
+  maildev:
+    image: maildev/maildev
+    container_name: maildev_fanread
+    command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    # MAILER_DSN=smtp://127.0.0.1:1025
+    ports:
+      - "8081:80"
+      - "1025:25"
+    restart: always
+    networks:
+      - maildev_network
+  ############################# MailDev #############################
+
+volumes:
+  database_data:
+
+networks:
+  # adminer_network:
+  maildev_network:
+  database_network:

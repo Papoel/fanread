@@ -1,0 +1,69 @@
+version: 2
+updates:
+  # === PHP / Composer ===
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "composer"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    groups:
+      # Regroupe les mises à jour mineures/patch en une seule PR
+      composer-minor-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # === GitHub Actions ===
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # === Docker (compose.yaml / Dockerfile) ===
+  # Décommentez si des images Docker sont à suivre
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "09:00"
+  #     timezone: "Europe/Paris"
+  #   labels:
+  #     - "dependencies"
+  #     - "docker"
+
+  # === npm / Yarn (front-end) ===
+  # Ce projet utilise AssetMapper (importmap.php), pas npm.
+  # Décommenter UNIQUEMENT dans les projets ayant un package.json.
+  # - package-ecosystem: "npm"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "09:00"
+  #     timezone: "Europe/Paris"
+  #   labels:
+  #     - "dependencies"
+  #     - "javascript"

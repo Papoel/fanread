@@ -1,0 +1,64 @@
+name: Quality Analysis
+on: [push, pull_request]
+
+jobs:
+    quality:
+        name: Quality Analysis
+        runs-on: ubuntu-latest
+        container:
+            image: jakzal/phpqa:php8.4
+            options: --user root
+
+        steps:
+            - name: Set safe directory
+              run: |
+                  git config --global --add safe.directory "$GITHUB_WORKSPACE"
+                  chown -R $(id -u):$(id -g) "$GITHUB_WORKSPACE"
+
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Install XSL extension
+              run: |
+                  apt-get update
+                  apt-get install -y libxslt-dev
+                  docker-php-ext-install xsl
+
+            - name: Setup Cache
+              run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
+
+            - name: Caching deps
+              uses: actions/cache@v5
+              with:
+                  path: ${{ env.COMPOSER_CACHE_DIR }}
+                  key: php8.4-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: |
+                      php8.4-composer-latest-
+
+            - name: Validate composer.json
+              run: composer validate --strict
+
+            - name: Install dependencies
+              run: |
+                  composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --ignore-platform-req=ext-amqp
+
+            - name: PHPStan
+              run: |
+                  # Afficher la version de PHPStan pour le débogage
+                  phpstan --version
+                  # Exécuter PHPStan avec configuration
+                  phpstan analyse --configuration=phpstan.neon --memory-limit=1G --error-format=github
+              continue-on-error: false
+
+            - name: PHPCPD (Copy/Paste Detector)
+              run: phpcpd ./src --min-lines=5 --min-tokens=50
+              continue-on-error: true
+
+            - name: Lint YAML
+              run: php bin/console lint:yaml config
+
+            - name: Lint Twig
+              run: php bin/console lint:twig templates
+
+            - name: Lint Container
+              run: php bin/console lint:container
