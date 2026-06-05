@@ -13,3 +13,8 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> Dossier brainstorming ###
+00. REFLEXION/
+plan.md
+###< Dossier brainstorming ###
