@@ -1,4 +1,6 @@
 {
+    "name": "papoel/fanread",
+    "description": "Fanread est un projet pour les amateurs de lecture",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
