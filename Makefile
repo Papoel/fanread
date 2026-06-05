@@ -527,7 +527,7 @@ ci-full: before-commit test ## 🚀 Lance toute la CI complète (identique à Gi
 
 phpstan: ## 🔍 Analyse statique du code avec PHPStan (niveau max)
 	@echo "$(CYAN)🔍 Analyse statique du code avec PHPStan (niveau max)...$(NC)"
-	@$(PHPQA_RUN) phpstan analyse -l max src
+	@$(PHPQA_RUN) phpstan analyse --configuration=phpstan.neon --memory-limit=1G
 	@echo "$(GREEN)✅ Analyse PHPStan terminée$(NC)"
 
 phpstan-level: ## 🔍 Analyse statique du code avec PHPStan (niveau personnalisé) : make phpstan-level level=7
