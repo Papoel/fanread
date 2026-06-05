@@ -1,0 +1,280 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FanRead — Votre journal de lecture douceur{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col bg-background">
+
+    {# ================================================================
+       HEADER
+    ================================================================ #}
+    <header class="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+
+                {# Logo #}
+                <a href="{{ path('app_home') }}" class="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
+                    <div class="p-2 rounded-xl bg-muted">
+                        <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold font-heading text-foreground">FanRead</span>
+                </a>
+
+                {# Navigation desktop #}
+                <nav class="hidden md:flex items-center gap-2">
+                    <a href="{{ path('app_home') }}"
+                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 bg-muted text-primary">
+                        Accueil
+                    </a>
+                    <a href="#"
+                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-primary hover:bg-muted">
+                        Mes Livres
+                    </a>
+                    <a href="#"
+                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-primary hover:bg-muted">
+                        Statistiques
+                    </a>
+                </nav>
+
+                {# Bouton menu mobile #}
+                <button
+                    class="md:hidden p-2 rounded-xl text-primary hover:bg-muted transition-colors"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+                    aria-label="Ouvrir le menu">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            {# Menu mobile #}
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                <div class="flex flex-col gap-2">
+                    <a href="{{ path('app_home') }}"
+                       class="px-4 py-3 rounded-xl text-base font-semibold bg-muted text-primary">
+                        Accueil
+                    </a>
+                    <a href="#" class="px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground hover:text-primary hover:bg-muted transition-all duration-300">
+                        Mes Livres
+                    </a>
+                    <a href="#" class="px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground hover:text-primary hover:bg-muted transition-all duration-300">
+                        Statistiques
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {# ================================================================
+       MAIN
+    ================================================================ #}
+    <main class="flex-1">
+
+        {# ── HERO ────────────────────────────────────────────────── #}
+        <section class="relative min-h-[90dvh] flex items-center justify-center overflow-hidden">
+
+            {# Image de fond + overlay #}
+            <div class="absolute inset-0 z-0"
+                 style="background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=85'); background-size: cover; background-position: center 20%;">
+                {# Couche 1 : lisibilité du texte à gauche #}
+                <div class="absolute inset-0"
+                     style="background: linear-gradient(to right, hsl(var(--background) / 0.96) 0%, hsl(var(--background) / 0.82) 40%, hsl(var(--background) / 0.45) 65%, transparent 100%);"></div>
+                {# Couche 2 : teinte couleur douce #}
+                <div class="absolute inset-0"
+                     style="background: linear-gradient(to bottom left, hsl(var(--accent) / 0.18) 0%, transparent 60%);"></div>
+            </div>
+
+            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+                <div class="max-w-2xl">
+
+                    {# Badge #}
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-sm font-medium shadow-sm border"
+                         style="background-color: rgba(255,255,255,0.60); backdrop-filter: blur(4px); border-color: hsl(var(--primary) / 0.20);">
+                        <svg class="h-4 w-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                            <line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+                        </svg>
+                        <span class="text-primary">Votre cocon littéraire personnel</span>
+                    </div>
+
+                    {# Titre #}
+                    <h1 class="font-heading font-bold text-foreground mb-6"
+                        style="font-size: clamp(2.8rem, 6vw, 4.5rem); line-height: 1.1;">
+                        Prenez le temps <br>
+                        <span class="text-gradient">de savourer vos mots.</span>
+                    </h1>
+
+                    {# Description #}
+                    <p class="text-xl text-muted-foreground mb-10 max-w-lg leading-relaxed font-medium">
+                        Un espace chaleureux pour collectionner vos lectures, noter vos pensées et suivre l'évolution de votre bibliothèque.
+                    </p>
+
+                    {# CTA #}
+                    <a href="#"
+                       class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-primary-lg group"
+                       style="background-color: hsl(var(--primary));">
+                        Ouvrir ma bibliothèque
+                        <svg class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        {# ── FEATURES ────────────────────────────────────────────── #}
+        <section class="py-24 bg-white relative overflow-hidden">
+
+            {# Décoration fond #}
+            <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 rounded-full blur-3xl pointer-events-none"
+                 style="background-color: hsl(var(--accent) / 0.20);"></div>
+
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+                {# Titre section #}
+                <div class="text-center mb-16">
+                    <h2 class="font-heading font-bold text-foreground text-3xl md:text-4xl mb-4">
+                        Créé pour les amoureux des livres
+                    </h2>
+                    <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+                        Tout ce dont vous avez besoin pour garder une trace précieuse de vos moments de lecture.
+                    </p>
+                </div>
+
+                {# Grille des 4 features #}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+                    {# Feature 1 — Bibliothèque #}
+                    <div class="animate-fade-in-up-delay-1 rounded-3xl p-8 border border-border bg-background shadow-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group">
+                        <div class="rounded-2xl p-4 w-fit mb-6 transition-transform duration-300 group-hover:scale-110"
+                             style="background: linear-gradient(135deg, hsl(var(--primary) / 0.10), hsl(var(--secondary) / 0.10));">
+                            <svg class="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                <line x1="12" y1="6" x2="12" y2="12"/><line x1="9" y1="9" x2="15" y2="9"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-heading font-bold text-foreground text-2xl mb-3">Organisez votre bibliothèque</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed">
+                            Ajoutez facilement vos lectures grâce à la recherche par ISBN. Classez-les par catégories pour vous y retrouver.
+                        </p>
+                    </div>
+
+                    {# Feature 2 — Coups de cœur #}
+                    <div class="animate-fade-in-up-delay-2 rounded-3xl p-8 border border-border bg-background shadow-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group">
+                        <div class="rounded-2xl p-4 w-fit mb-6 transition-transform duration-300 group-hover:scale-110"
+                             style="background: linear-gradient(135deg, hsl(var(--primary) / 0.10), hsl(var(--secondary) / 0.10));">
+                            <svg class="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-heading font-bold text-foreground text-2xl mb-3">Gardez vos coups de cœur</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed">
+                            Mettez en favoris les livres qui vous ont marqué pour les retrouver en un clin d'œil.
+                        </p>
+                    </div>
+
+                    {# Feature 3 — Notes #}
+                    <div class="animate-fade-in-up-delay-3 rounded-3xl p-8 border border-border bg-background shadow-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group">
+                        <div class="rounded-2xl p-4 w-fit mb-6 transition-transform duration-300 group-hover:scale-110"
+                             style="background: linear-gradient(135deg, hsl(var(--primary) / 0.10), hsl(var(--secondary) / 0.10));">
+                            <svg class="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-heading font-bold text-foreground text-2xl mb-3">Notez et commentez</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed">
+                            Partagez vos impressions, attribuez des étoiles et gardez une trace de ce que vous avez ressenti.
+                        </p>
+                    </div>
+
+                    {# Feature 4 — Progrès #}
+                    <div class="animate-fade-in-up-delay-4 rounded-3xl p-8 border border-border bg-background shadow-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-2 group">
+                        <div class="rounded-2xl p-4 w-fit mb-6 transition-transform duration-300 group-hover:scale-110"
+                             style="background: linear-gradient(135deg, hsl(var(--primary) / 0.10), hsl(var(--secondary) / 0.10));">
+                            <svg class="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-heading font-bold text-foreground text-2xl mb-3">Suivez vos progrès</h3>
+                        <p class="text-muted-foreground text-lg leading-relaxed">
+                            Visualisez d'un simple coup d'œil où vous en êtes dans chacune de vos lectures en cours.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        {# ── CTA ─────────────────────────────────────────────────── #}
+        <section class="py-24" style="background: linear-gradient(to bottom, white, hsl(var(--primary) / 0.05));">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-3xl mx-auto bg-white p-12 rounded-[3rem] border shadow-primary-lg"
+                     style="border-color: hsl(var(--primary) / 0.10);">
+
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                         style="background-color: hsl(var(--accent) / 0.20);">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+
+                    <h2 class="font-heading font-bold text-foreground text-3xl md:text-5xl mb-6">
+                        Prêt à classer votre prochaine lecture ?
+                    </h2>
+
+                    <p class="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
+                        Rejoignez FanRead et transformez votre tas de livres en une magnifique collection numérique.
+                    </p>
+
+                    <a href="#"
+                       class="inline-flex items-center px-10 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-primary-lg"
+                       style="background-color: hsl(var(--primary));">
+                        Ajouter mon premier livre
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    {# ================================================================
+       FOOTER
+    ================================================================ #}
+    <footer class="border-t border-border py-12"
+            style="background: linear-gradient(to bottom, white, hsl(var(--accent) / 0.10));">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+                {# Logo #}
+                <div class="flex items-center gap-2">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span class="text-xl font-bold font-heading text-foreground">FanRead</span>
+                </div>
+
+                {# Tagline #}
+                <p class="text-sm text-muted-foreground flex items-center gap-1">
+                    Fait avec
+                    <svg class="h-4 w-4 text-primary inline" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    pour les passionnés de lecture
+                </p>
+
+                {# Liens #}
+                <div class="flex gap-6 text-sm font-medium text-muted-foreground">
+                    <a href="#" class="hover:text-primary transition-colors duration-200">Confidentialité</a>
+                    <a href="#" class="hover:text-primary transition-colors duration-200">Conditions</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+</div>
+{% endblock %}
