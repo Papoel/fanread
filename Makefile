@@ -18,6 +18,8 @@ NC := \033[0m
 
 # Variable du projet
 PROJECT_NAME := FAN_READ
+# Détection automatique de Tailwind CSS
+TW_USED := $(shell grep -q '@import "tailwindcss"' assets/styles/app.css 2>/dev/null && echo "true" || echo "false")
 
 # Variables Symfony
 SYMFONY_BIN := symfony
@@ -61,7 +63,7 @@ SERVER_PORT := 8000
         phpstan phpstan-level phpstan-file phpstan-baseline  phpmd phpcpd phpcs phpcbf phpmetrics phpinsights qa qa-full \
         serve console routes router-match debug-container debug-events \
         jwt-install jwt-generate-keys jwt-keys-permissions jwt-check-config jwt-test-token jwt-decode jwt-setup jwt-clean \
-        security-check security-audit before-commit cs-fix cs-check ci ci-full
+        security-check security-audit before-commit cs-fix cs-check ci ci-full tw tw-isUsed tw-daemon tw-stop
 
 # Target par défaut
 .DEFAULT_GOAL := help
@@ -111,6 +113,9 @@ start: docker-start serve ## 🚀 Démarre le projet (Docker + SGBD + serveur Sy
 	@echo ""
 	@echo "$(CYAN)✅ Docker démarré$(NC)"
 	@echo "$(CYAN)✅ Serveur Symfony démarré$(NC)"
+	@if [ "$(TW_USED)" = "true" ]; then \
+		$(MAKE) tw-daemon; \
+	fi
 	@echo ""
 	@echo "$(YELLOW)💡 Utilisez 'make stop' pour tout arrêter$(NC)"
 	@echo ""
@@ -119,6 +124,11 @@ stop: docker-down ## 🛑 Arrête tous les services (Docker + Symfony)
 	@echo ""
 	@echo "$(YELLOW)🛑 Arrêt du serveur Symfony...$(NC)"
 	@$(SYMFONY_BIN) server:stop 2>/dev/null || true
+	@if [ -f /tmp/tailwind.pid ]; then \
+		echo "$(YELLOW)🛑 Arrêt de Tailwind CSS...$(NC)"; \
+		kill $$(cat /tmp/tailwind.pid) 2>/dev/null || true; \
+		rm -f /tmp/tailwind.pid; \
+	fi
 	@echo "$(GREEN)✅ Tous les services sont arrêtés$(NC)"
 	@echo ""
 
@@ -189,6 +199,34 @@ show-wip: ## 📝 Affiche les commits de la branche courante (utile pour les PR)
 	echo "$(CYAN)━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━$(NC)"; \
 	echo "$(BOLD)$(GREEN)💡 Astuce:$(NC) Copiez ces informations pour votre Pull Request"; \
 	echo ""
+
+# =============================================================================
+# GESTION TAILWIND CSS
+# =============================================================================
+
+tw: ## 🎨 Lancer Tailwind CSS en mode watch (bloquant)
+	@$(CONSOLE) tailwind:build --watch
+
+tw-daemon: ## 🎨 Lancer Tailwind CSS en arrière-plan (daemon)
+	@echo "$(CYAN)🎨 Démarrage de Tailwind CSS en arrière-plan...$(NC)"
+	@$(CONSOLE) tailwind:build --watch > /tmp/tailwind.log 2>&1 & echo $$! > /tmp/tailwind.pid
+	@echo "$(GREEN)✅ Tailwind CSS démarré (PID: $$(cat /tmp/tailwind.pid))$(NC)"
+	@echo "$(YELLOW)💡 Logs: tail -f /tmp/tailwind.log$(NC)"
+
+tw-stop: ## 🛑 Arrêter le daemon Tailwind CSS
+	@if [ -f /tmp/tailwind.pid ]; then \
+		kill $$(cat /tmp/tailwind.pid) 2>/dev/null && echo "$(GREEN)✅ Tailwind CSS arrêté$(NC)" || echo "$(YELLOW)⚠️  Process déjà terminé$(NC)"; \
+		rm -f /tmp/tailwind.pid; \
+	else \
+		echo "$(YELLOW)⚠️  Aucun daemon Tailwind en cours$(NC)"; \
+	fi
+
+tw-isUsed: ## 🔍 Vérifie si Tailwind CSS est utilisé dans le projet
+	@if [ "$(TW_USED)" = "true" ]; then \
+		echo "$(GREEN)✅ Tailwind CSS est utilisé $(CYAN)(assets/styles/app.css)$(NC)"; \
+	else \
+		echo "$(YELLOW)⚠️  Tailwind CSS non détecté dans assets/styles/app.css$(NC)"; \
+	fi
 
 # =============================================================================
 # GESTION COMPOSER

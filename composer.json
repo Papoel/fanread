@@ -19,7 +19,8 @@
         "symfony/twig-bundle": "8.1.*",
         "symfony/ux-live-component": "^3.1",
         "symfony/ux-native": "^3.1",
-        "symfony/yaml": "8.1.*"
+        "symfony/yaml": "8.1.*",
+        "symfonycasts/tailwind-bundle": "^0.13.0"
     },
     "config": {
         "allow-plugins": {
