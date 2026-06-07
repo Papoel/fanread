@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Tests\Controller\Home;
+namespace App\Tests\Controller\Books;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-final class HomeControllerTest extends WebTestCase
+final class BooksControllerTest extends WebTestCase
 {
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request(Request::METHOD_GET, '/');
+        $client->request(Request::METHOD_GET, '/books');
 
         self::assertResponseIsSuccessful();
     }

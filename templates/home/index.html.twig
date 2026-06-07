@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}FanRead — Votre journal de lecture douceur{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
 <div class="min-h-screen flex flex-col bg-background">
@@ -8,64 +8,7 @@
     {# ================================================================
        HEADER
     ================================================================ #}
-    <header class="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md shadow-sm">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
-
-                {# Logo #}
-                <a href="{{ path('app_home') }}" class="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
-                    <div class="p-2 rounded-xl bg-muted">
-                        <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <span class="text-2xl font-bold font-heading text-foreground">FanRead</span>
-                </a>
-
-                {# Navigation desktop #}
-                <nav class="hidden md:flex items-center gap-2">
-                    <a href="{{ path('app_home') }}"
-                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 bg-muted text-primary">
-                        Accueil
-                    </a>
-                    <a href="#"
-                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-primary hover:bg-muted">
-                        Mes Livres
-                    </a>
-                    <a href="#"
-                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-primary hover:bg-muted">
-                        Statistiques
-                    </a>
-                </nav>
-
-                {# Bouton menu mobile #}
-                <button
-                    class="md:hidden p-2 rounded-xl text-primary hover:bg-muted transition-colors"
-                    onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
-                    aria-label="Ouvrir le menu">
-                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-
-            {# Menu mobile #}
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <div class="flex flex-col gap-2">
-                    <a href="{{ path('app_home') }}"
-                       class="px-4 py-3 rounded-xl text-base font-semibold bg-muted text-primary">
-                        Accueil
-                    </a>
-                    <a href="#" class="px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground hover:text-primary hover:bg-muted transition-all duration-300">
-                        Mes Livres
-                    </a>
-                    <a href="#" class="px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground hover:text-primary hover:bg-muted transition-all duration-300">
-                        Statistiques
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+    {% include 'partials/_navbar.html.twig' %}
 
     {# ================================================================
        MAIN
@@ -112,7 +55,7 @@
                     </p>
 
                     {# CTA #}
-                    <a href="#"
+                    <a href="{{path('app_book')}}"
                        class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-bold text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-primary-lg group"
                        style="background-color: hsl(var(--primary));">
                         Ouvrir ma bibliothèque
@@ -244,37 +187,7 @@
     {# ================================================================
        FOOTER
     ================================================================ #}
-    <footer class="border-t border-border py-12"
-            style="background: linear-gradient(to bottom, white, hsl(var(--accent) / 0.10));">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-
-                {# Logo #}
-                <div class="flex items-center gap-2">
-                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    <span class="text-xl font-bold font-heading text-foreground">FanRead</span>
-                </div>
-
-                {# Tagline #}
-                <p class="text-sm text-muted-foreground flex items-center gap-1">
-                    Fait avec
-                    <svg class="h-4 w-4 text-primary inline" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    pour les passionnés de lecture
-                </p>
-
-                {# Liens #}
-                <div class="flex gap-6 text-sm font-medium text-muted-foreground">
-                    <a href="#" class="hover:text-primary transition-colors duration-200">Confidentialité</a>
-                    <a href="#" class="hover:text-primary transition-colors duration-200">Conditions</a>
-                </div>
-
-            </div>
-        </div>
-    </footer>
+    {% include 'partials/_footer.html.twig' %}
 
 </div>
 {% endblock %}

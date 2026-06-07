@@ -1,0 +1,68 @@
+<header class="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md shadow-sm">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div
+			class="flex h-16 items-center justify-between">
+
+			{# Logo #}
+			<a href="{{ path('app_home') }}" class="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
+				<div class="p-2 rounded-xl bg-muted">
+					<svg class="h-6 w-6 text-primary" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
+					</svg>
+				</div>
+				<span class="text-2xl font-bold font-heading text-foreground">FanRead</span>
+			</a>
+
+			{# Navigation desktop #}
+			<nav class="hidden md:flex items-center gap-2">
+				<a href="{{ path('app_home') }}"
+                    class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 hover:text-rose-600 hover:bg-red-50
+                    {{ app.request.attributes.get('_route') == 'app_home'
+                    ? 'bg-red-50 text-rose-600'
+                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+					Accueil
+				</a>
+				<a href="{{ path('app_book') }}"
+                    class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 hover:text-rose-600 hover:bg-red-50
+                    {{ app.request.attributes.get('_route') == 'app_book'
+                    ? 'bg-red-50 text-rose-600'
+                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+					Mes Livres
+				</a>
+				<a href="#" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
+					Statistiques
+				</a>
+			</nav>
+
+			{# Bouton menu mobile #}
+			<button class="md:hidden p-2 rounded-xl text-primary hover:bg-muted transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" aria-label="Ouvrir le menu">
+				<svg class="h-6 w-6" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+				</svg>
+			</button>
+		</div>
+
+		{# Menu mobile #}
+		<div id="mobile-menu" class="hidden md:hidden pb-4">
+			<div class="flex flex-col gap-2">
+				<a href="{{ path('app_home') }}"
+                    class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300
+                    {{ app.request.attributes.get('_route') == 'app_home'
+                    ? 'bg-red-50 text-rose-600'
+                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+					Accueil
+				</a>
+				<a href="{{ path('app_book') }}"
+                    class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300
+                    {{ app.request.attributes.get('_route') == 'app_book'
+                    ? 'bg-red-50 text-rose-600'
+                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+					Mes Livres
+				</a>
+				<a href="#" class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
+					Statistiques
+				</a>
+			</div>
+		</div>
+	</div>
+</header>
