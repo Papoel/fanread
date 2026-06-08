@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -55,12 +57,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, Book>
+     */
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'user')]
+    private Collection $books;
+
     public function __construct()
     {
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->createdAt = new \DateTimeImmutable('now', $timezone);
         // Role par défaut
         $this->roles = ['ROLE_USER'];
+        $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,6 +227,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getUser() === $this) {
+                $book->setUser(null);
+            }
+        }
 
         return $this;
     }
