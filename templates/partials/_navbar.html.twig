@@ -1,68 +1,233 @@
 <header class="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-md shadow-sm">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-		<div
-			class="flex h-16 items-center justify-between">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between gap-4">
 
-			{# Logo #}
-			<a href="{{ path('app_home') }}" class="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
-				<div class="p-2 rounded-xl bg-muted">
-					<svg class="h-6 w-6 text-primary" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
-					</svg>
-				</div>
-				<span class="text-2xl font-bold font-heading text-foreground">FanRead</span>
-			</a>
+            {# ── Logo ── #}
+            <a href="{{ path('app_home') }}" class="flex items-center gap-2 transition-transform duration-300 hover:scale-105 shrink-0">
+                <div class="p-2 rounded-xl bg-muted">
+                    <svg class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold font-heading text-foreground">FanRead</span>
+            </a>
 
-			{# Navigation desktop #}
-			<nav class="hidden md:flex items-center gap-2">
-				<a href="{{ path('app_home') }}"
-                    class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 hover:text-rose-600 hover:bg-red-50
-                    {{ app.request.attributes.get('_route') == 'app_home'
-                    ? 'bg-red-50 text-rose-600'
-                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
-					Accueil
-				</a>
-				<a href="{{ path('app_book') }}"
-                    class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 hover:text-rose-600 hover:bg-red-50
-                    {{ app.request.attributes.get('_route') == 'app_book'
-                    ? 'bg-red-50 text-rose-600'
-                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
-					Mes Livres
-				</a>
-				<a href="#" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
-					Statistiques
-				</a>
-			</nav>
+            {# ── Navigation desktop ── #}
+            <nav class="hidden md:flex items-center gap-1">
+                <a href="{{ path('app_home') }}"
+                   class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+                   {{ app.request.attributes.get('_route') == 'app_home'
+                       ? 'bg-red-50 text-rose-600'
+                       : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+                    Accueil
+                </a>
+                <a href="{{ path('app_book') }}"
+                   class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+                   {{ app.request.attributes.get('_route') == 'app_book'
+                       ? 'bg-red-50 text-rose-600'
+                       : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+                    Mes Livres
+                </a>
+                <a href="#"
+                   class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
+                    Statistiques
+                </a>
+            </nav>
 
-			{# Bouton menu mobile #}
-			<button class="md:hidden p-2 rounded-xl text-primary hover:bg-muted transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" aria-label="Ouvrir le menu">
-				<svg class="h-6 w-6" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
-				</svg>
-			</button>
-		</div>
+            {# ── Zone droite : auth + bouton mobile ── #}
+            <div class="flex items-center gap-2">
 
-		{# Menu mobile #}
-		<div id="mobile-menu" class="hidden md:hidden pb-4">
-			<div class="flex flex-col gap-2">
-				<a href="{{ path('app_home') }}"
-                    class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300
-                    {{ app.request.attributes.get('_route') == 'app_home'
-                    ? 'bg-red-50 text-rose-600'
-                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
-					Accueil
-				</a>
-				<a href="{{ path('app_book') }}"
-                    class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300
-                    {{ app.request.attributes.get('_route') == 'app_book'
-                    ? 'bg-red-50 text-rose-600'
-                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
-					Mes Livres
-				</a>
-				<a href="#" class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
-					Statistiques
-				</a>
-			</div>
-		</div>
-	</div>
+                {# ── Auth desktop (masqué sur mobile) ── #}
+                <div class="hidden md:flex items-center gap-2">
+
+                    {% if app.user %}
+
+                        {# ── Dropdown utilisateur connecté ── #}
+                        <div class="relative" data-controller="dropdown">
+
+                            <button type="button"
+                                    data-action="click->dropdown#toggle"
+                                    class="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-muted transition-colors duration-200 focus:outline-none">
+                                {# Avatar initiale #}
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                                     style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                                    {{ ((app.user.isPseudoDisplayed and app.user.pseudo)
+                                        ? app.user.pseudo
+                                        : (app.user.firstname ?? app.user.email)
+                                    )|first|upper }}
+                                </div>
+                                <span class="text-sm font-semibold text-foreground max-w-[120px] truncate">
+                                    {{ (app.user.isPseudoDisplayed and app.user.pseudo)
+                                        ? app.user.pseudo
+                                        : ((app.user.firstname ~ ' ' ~ app.user.lastname)|trim ?: app.user.email) }}
+                                </span>
+                                <svg class="h-4 w-4 text-muted-foreground transition-transform duration-200"
+                                     data-dropdown-target="chevron"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M6 9l6 6 6-6"/>
+                                </svg>
+                            </button>
+
+                            {# ── Panneau dropdown ── #}
+                            <div data-dropdown-target="menu"
+                                 class="hidden absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-border shadow-primary-lg p-1.5 z-50">
+
+                                {# Info utilisateur #}
+                                <div class="px-3 py-2.5 mb-1">
+                                    <p class="text-sm font-semibold text-foreground truncate">
+                                        <p class="text-sm font-semibold text-foreground truncate">
+                                            {{ (app.user.isPseudoDisplayed and app.user.pseudo)
+                                                ? app.user.pseudo
+                                                : ((app.user.firstname ~ ' ' ~ app.user.lastname)|trim ?: 'Mon compte') }}
+                                        </p>
+                                    </p>
+                                    <p class="text-xs text-muted-foreground truncate mt-0.5">
+                                        {{ app.user.email }}
+                                    </p>
+                                </div>
+                                <div class="border-t border-border mb-1"></div>
+
+                                {# Ma bibliothèque #}
+                                <a href="{{ path('app_book') }}"
+                                   class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors duration-150">
+                                    <svg class="h-4 w-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                    Ma bibliothèque
+                                </a>
+
+                                {# Mon profil — route à créer en step-04 #}
+                                <a href="{{ path('app_profile') }}"
+                                   class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors duration-150">
+                                    <svg class="h-4 w-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    Mon profil
+                                </a>
+
+                                <div class="border-t border-border my-1"></div>
+
+                                {# Déconnexion #}
+                                <a href="{{ path('app_logout') }}"
+                                   class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-red-50 transition-colors duration-150"
+                                   style="color: hsl(var(--destructive));">
+                                    <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                        <polyline points="16 17 21 12 16 7"/>
+                                        <line x1="21" y1="12" x2="9" y2="12"/>
+                                    </svg>
+                                    Se déconnecter
+                                </a>
+                            </div>
+                        </div>
+
+                    {% else %}
+
+                        {# ── Boutons non connecté ── #}
+                        <a href="{{ path('app_login') }}"
+                           class="px-4 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-primary hover:bg-muted transition-all duration-200">
+                            Se connecter
+                        </a>
+                        <a href="{{ path('app_register') }}"
+                           class="px-4 py-2 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                           style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                            S'inscrire
+                        </a>
+
+                    {% endif %}
+                </div>
+
+                {# ── Bouton menu mobile ── #}
+                <button class="md:hidden p-2 rounded-xl text-primary hover:bg-muted transition-colors"
+                        onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+                        aria-label="Ouvrir le menu">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {# ================================================================
+           MENU MOBILE
+        ================================================================ #}
+        <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-border mt-1">
+            <div class="flex flex-col gap-1 pt-3">
+
+                {# Navigation #}
+                <a href="{{ path('app_home') }}"
+                   class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-200
+                   {{ app.request.attributes.get('_route') == 'app_home'
+                       ? 'bg-red-50 text-rose-600'
+                       : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+                    Accueil
+                </a>
+                <a href="{{ path('app_book') }}"
+                   class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-200
+                   {{ app.request.attributes.get('_route') == 'app_book'
+                       ? 'bg-red-50 text-rose-600'
+                       : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
+                    Mes Livres
+                </a>
+                <a href="#"
+                   class="px-4 py-3 rounded-xl text-base font-semibold transition-all duration-200 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
+                    Statistiques
+                </a>
+
+                <div class="border-t border-border my-2"></div>
+
+                {# Auth mobile #}
+                {% if app.user %}
+
+                    {# Info utilisateur #}
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-muted/50">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                             style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                            {{ (app.user.pseudo ?? app.user.firstname ~ ' ' ~ app.user.lastname)|first|upper }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold text-foreground truncate">{{ app.user.pseudo ?? 'Mon compte' }}</p>
+                            <p class="text-xs text-muted-foreground truncate">{{ app.user.email }}</p>
+                        </div>
+                    </div>
+
+                    {# Mon profil #}
+                    <a href="{{ path('app_profile') }}"
+                       class="flex items-center gap-2.5 px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground hover:text-rose-600 hover:bg-red-50 transition-colors duration-200">
+                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Mon profil
+                    </a>
+
+                    {# Déconnexion #}
+                    <a href="{{ path('app_logout') }}"
+                       class="flex items-center gap-2.5 px-4 py-3 rounded-xl text-base font-semibold hover:bg-red-50 transition-colors duration-200"
+                       style="color: hsl(var(--destructive));">
+                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Se déconnecter
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ path('app_login') }}"
+                       class="flex items-center justify-center px-4 py-3 rounded-xl text-base font-semibold text-muted-foreground border border-border hover:text-primary hover:border-primary hover:bg-muted transition-all duration-200">
+                        Se connecter
+                    </a>
+                    <a href="{{ path('app_register') }}"
+                       class="flex items-center justify-center px-4 py-3 rounded-xl text-base font-bold text-white transition-all duration-200 active:scale-95"
+                       style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                        S'inscrire
+                    </a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </header>
