@@ -34,8 +34,8 @@ class Book
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $review = null;
 
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true, enumType: Status::class)]
-    private ?array $status = null;
+    #[ORM\Column(type: Types::STRING, nullable: true, enumType: Status::class)]
+    private ?Status $status = Status::NotStarted;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $addedAt = null;
@@ -43,8 +43,8 @@ class Book
     #[ORM\Column]
     private ?bool $isFavorite = null;
 
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true, enumType: Category::class)]
-    private ?array $category = null;
+    #[ORM\Column(type: Types::STRING, nullable: true, enumType: Category::class)]
+    private ?Category $category = Category::Unclassified;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $isbn = null;
@@ -133,14 +133,14 @@ class Book
     }
 
     /**
-     * @return Status[]|null
+     * @return Status
      */
-    public function getStatus(): ?array
+    public function getStatus(): ?Status
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): static
+    public function setStatus(?Status $status): static
     {
         $this->status = $status;
 
@@ -172,14 +172,14 @@ class Book
     }
 
     /**
-     * @return Category[]|null
+     * @return Category|null
      */
-    public function getCategory(): ?array
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?array $category): static
+    public function setCategory(?Category $category): static
     {
         $this->category = $category;
 

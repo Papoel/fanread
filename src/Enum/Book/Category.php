@@ -64,4 +64,63 @@ enum Category: string
     case Other             = 'autre';
     case Unknown           = 'inconnu';
     case Unclassified      = 'non_classe';
+
+    public function label(): string
+    {
+        return match ($this) {
+            // Fiction
+            self::Fiction           => 'Fiction',
+            self::ScienceFiction    => 'Science-fiction',
+            self::Fantasy           => 'Fantasy',
+            self::Thriller          => 'Thriller',
+            self::Horror            => 'Horreur',
+            self::Mystery           => 'Policier / Mystère',
+            self::Romance           => 'Romance',
+            self::HistoricalFiction => 'Fiction historique',
+            self::Adventure         => 'Aventure',
+            self::YoungAdult        => 'Jeunesse',
+            self::GraphicNovel      => 'Bande dessinée',
+            // Non-fiction
+            self::Biography         => 'Biographie',
+            self::Autobiography     => 'Autobiographie',
+            self::History           => 'Histoire',
+            self::Science           => 'Science',
+            self::Mathematics       => 'Mathématiques',
+            self::Technology        => 'Technologie',
+            self::SelfHelp          => 'Développement personnel',
+            self::Psychology        => 'Psychologie',
+            self::Philosophy        => 'Philosophie',
+            self::Politics          => 'Politique',
+            self::Economics         => 'Économie',
+            self::Business          => 'Entreprise',
+            self::Law               => 'Droit',
+            self::Religion          => 'Religion',
+            self::Spirituality      => 'Spiritualité',
+            // Arts
+            self::Art               => 'Art',
+            self::Music             => 'Musique',
+            self::Cinema            => 'Cinéma',
+            self::Architecture      => 'Architecture',
+            self::Photography       => 'Photographie',
+            // Littérature
+            self::Literature        => 'Littérature',
+            self::Poetry            => 'Poésie',
+            self::Drama             => 'Théâtre',
+            self::Language          => 'Linguistique',
+            self::Essay             => 'Essai',
+            // Pratique
+            self::Cooking           => 'Cuisine',
+            self::Travel            => 'Voyage',
+            self::Sports            => 'Sport',
+            self::Health            => 'Santé',
+            self::Nature            => 'Nature',
+            self::Education         => 'Éducation',
+            // Autre
+            self::Comics            => 'Comics',
+            self::Manga             => 'Manga',
+            self::Other             => 'Autre',
+            self::Unknown           => 'Inconnu',
+            self::Unclassified      => 'Non classé',
+        };
+    }
 }

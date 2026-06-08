@@ -4,7 +4,16 @@ namespace App\Enum\Book;
 
 enum Status: string
 {
-    case Draft     = 'draft';
-    case Published = 'published';
-    case Archived  = 'archived';
+    case NotStarted = 'non_commence';
+    case InProgress = 'en_cours';
+    case Finish = 'termine';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::NotStarted => 'Non commencé',
+            self::InProgress => 'En cours',
+            self::Finish => 'Terminé',
+        };
+    }
 }
