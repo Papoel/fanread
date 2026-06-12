@@ -1,0 +1,21 @@
+<div class="relative flex items-start gap-3 w-full max-w-sm px-4 py-3.5 rounded-2xl border
+            bg-[#FEF6E8] border-[#FADFAA] shadow-sm pointer-events-auto overflow-hidden
+            transition-all duration-300">
+    <div class="flex-shrink-0 w-9 h-9 rounded-[10px] flex items-center justify-center bg-[#FAE5B8] text-[#854F0B]">
+        <twig:ux:icon name="lucide:triangle-alert" class="w-[18px] h-[18px]" />
+    </div>
+    <div class="flex-1 min-w-0 pt-0.5">
+        <p class="text-[13px] font-semibold leading-tight mb-0.5 text-[#412402]">Attention</p>
+        <p class="text-[12px] leading-snug opacity-90 text-[#854F0B]">{{ message }}</p>
+    </div>
+    <button type="button"
+            data-action="live#action"
+            data-live-action-param="removeToast"
+            data-live-id-param="{{ id }}"
+            class="flex-shrink-0 mt-0.5 p-1 rounded-lg hover:bg-black/5 transition-colors text-[#854F0B]"
+            aria-label="Fermer">
+        <twig:ux:icon name="lucide:x" class="w-3.5 h-3.5" />
+    </button>
+    <span class="absolute bottom-0 left-0 right-0 h-[2px] bg-[#EF9F27] origin-left"
+          style="animation: notif-shrink 5s linear forwards;"></span>
+</div>

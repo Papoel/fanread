@@ -41,40 +41,33 @@
             {% include 'book/_header.html.twig' %}
 
             {# ── Bouton + formulaire d'ajout (toggle via Stimulus) ───── #}
-            {# <div class="mb-10"
-                 data-controller="collapsible"
-                 data-collapsible-open-value="{{ showForm ? 'true' : 'false' }}">
+            <div class="mb-10"
+                data-controller="collapsible"
+                data-collapsible-open-value="{{ showForm ? 'true' : 'false' }}">
 
-                <button
-                    data-action="click->collapsible#toggle"
-                    data-collapsible-target="trigger"
-                    class="mb-4 transition-all duration-300 active:scale-95 font-semibold rounded-xl px-4 py-2 flex items-center
-                           {{ showForm
-                               ? 'bg-muted text-foreground hover:bg-muted/80'
-                               : 'bg-primary text-white shadow-lg shadow-primary/20' }}">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         data-collapsible-target="icon"
-                         class="h-5 w-5 mr-2 transition-transform duration-300 {{ showForm ? 'rotate-45' : '' }}"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button data-action="click->collapsible#toggle"
+                        data-collapsible-target="trigger"
+                        class="mb-4 transition-all duration-300 active:scale-95 font-semibold rounded-xl px-5 py-2.5 flex items-center gap-2
+                            {{ showForm ? 'bg-muted text-foreground' : 'bg-primary text-white shadow-primary-lg' }}">
+                    <svg data-collapsible-target="icon"
+                        class="h-5 w-5 transition-transform duration-300"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5"  y1="12" x2="19" y2="12"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
                     <span data-collapsible-target="label"
-                          data-open-text="Fermer le formulaire"
-                          data-closed-text="Ajouter une lecture">
+                        data-open-text="Fermer le formulaire"
+                        data-closed-text="Ajouter une lecture">
                         {{ showForm ? 'Fermer le formulaire' : 'Ajouter une lecture' }}
                     </span>
                 </button>
 
                 <div data-collapsible-target="content"
-                     class="pt-2 pb-6 transition-all duration-300 overflow-hidden
-                            {{ showForm ? '' : 'hidden' }}">
+                    class="{{ showForm ? '' : 'hidden' }} pt-2 pb-6">
                     {% include 'book/_form.html.twig' with { form: bookForm } only %}
                 </div>
 
-            </div> #}
+            </div>
 
             {# ── Barre de filtres (formulaire GET auto-submit) ────────── #}
             <form method="GET"
@@ -101,29 +94,20 @@
                     </div>
 
                     {# Filtre statut #}
-                    {% set filterStatus = filterStatus|default('all') %}
-                    <select name="status"
-                            data-action="change->auto-submit#submit"
-                            class="w-full sm:w-[160px] bg-background border border-primary/20 font-medium
-                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-                        <option value="all"       {{ filterStatus == 'all'       ? 'selected' : '' }}>Tous les statuts</option>
-                        <option value="en cours"  {{ filterStatus == 'en cours'  ? 'selected' : '' }}>En cours</option>
-                        <option value="terminé"   {{ filterStatus == 'terminé'   ? 'selected' : '' }}>Terminés</option>
+                    <select name="status" data-action="change->auto-submit#submit" class="...">
+                        <option value="all"     {{ filterStatus == 'all'     ? 'selected' : '' }}>Tous les statuts</option>
+                        <option value="non_commence" {{ filterStatus == 'non_commence' ? 'selected' : '' }}>Non commencé</option>
+                        <option value="en_cours"{{ filterStatus == 'en_cours'? 'selected' : '' }}>En cours</option>
+                        <option value="termine" {{ filterStatus == 'termine' ? 'selected' : '' }}>Terminés</option>
                     </select>
 
-                    {# Filtre catégorie #}
-                    {% set filterCategory = filterCategory|default('Toutes catégories') %}
-                    {% set categories = [
-                        'Toutes catégories', 'Non classé', 'Romance', 'Fantasy', 'Thriller',
-                        'Développement personnel', 'Science-fiction', 'Mystère', 'Jeunesse', 'Classique'
-                    ] %}
-                    <select name="category"
-                            data-action="change->auto-submit#submit"
-                            class="w-full sm:w-[180px] bg-background border border-primary/20 font-medium
-                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    {# Filtre catégorie — depuis le controller via Category::cases() #}
+                    <select name="category" data-action="change->auto-submit#submit" class="...">
+                        <option value="all" {{ filterCategory == 'all' ? 'selected' : '' }}>Toutes catégories</option>
                         {% for cat in categories %}
-                            <option value="{{ cat }}" {{ filterCategory == cat ? 'selected' : '' }}>
-                                {{ cat }}
+                            <option value="{{ cat.value }}"
+                                {{ filterCategory == cat.value ? 'selected' : '' }}>
+                                {{ cat.label() }}
                             </option>
                         {% endfor %}
                     </select>
@@ -188,7 +172,7 @@
                         {% if activeTab == 'favorites' %}
                             Vous n'avez pas encore ajouté de livres à vos favoris.
                             Cliquez sur le cœur d'un livre pour l'ajouter.
-                        {% elseif filterStatus != 'all' or filterCategory != 'Toutes catégories' %}
+                        {% elseif filterStatus != 'all' or filterCategory != 'all' %}
                             Aucun livre ne correspond à vos filtres actuels.
                         {% else %}
                             Votre bibliothèque est encore vide. Commencez par ajouter une lecture !
@@ -196,7 +180,7 @@
                     </p>
 
                     {# CTA : ajouter le premier livre #}
-                    {% if activeTab == 'all' and filterStatus == 'all' and filterCategory == 'Toutes catégories' %}
+                    {% if activeTab == 'all' and filterStatus == 'all' and filterCategory == 'all' %}
                         <a href="{{ path('app_book', {'showForm': 1}) }}"
                            class="inline-flex items-center bg-primary hover:bg-primary/90 text-white
                                   rounded-xl shadow-lg shadow-primary/20 transition-all duration-300
@@ -212,7 +196,7 @@
                     {% endif %}
 
                     {# CTA : réinitialiser les filtres #}
-                    {% if filterStatus != 'all' or filterCategory != 'Toutes catégories' %}
+                    {% if filterStatus != 'all' or filterCategory != 'all' %}
                         <a href="{{ path('app_book', {'tab': activeTab}) }}"
                            class="inline-flex items-center rounded-xl border border-primary/20 text-primary
                                   hover:bg-primary/5 font-semibold px-6 py-2 transition-all">
@@ -226,7 +210,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {% for book in sortedBooks %}
-                        {% include 'book/_book_card.html.twig' with { book: book } only %}
+                        {{ component('BookCardComponent', { book: book }) }}
                     {% endfor %}
                 </div>
 
@@ -239,6 +223,4 @@
 
 </div>
 
-{# Modal review — géré par votre propre implémentation Bootstrap/Twig #}
-{# {% include 'book/_review_modal.html.twig' %} #}
 {% endblock %}

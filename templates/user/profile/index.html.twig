@@ -1,0 +1,318 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col bg-background">
+
+    {% include 'partials/_navbar.html.twig' %}
+
+    <main class="flex-1 py-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+
+            {# ================================================================
+               EN-TÊTE PROFIL
+            ================================================================ #}
+            <div class="relative rounded-2xl overflow-hidden mb-8 p-8"
+                 style="background: linear-gradient(135deg, hsl(var(--primary) / 0.10) 0%, hsl(var(--accent) / 0.12) 100%);
+                        border: 1px solid hsl(var(--border));">
+
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+
+                    {# Avatar #}
+                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shrink-0 shadow-primary-lg"
+                         style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                        {{ (app.user.pseudo ?? app.user.firstname ?? app.user.email)|first|upper }}
+                    </div>
+
+                    {# Infos #}
+                    <div class="flex-1 text-center sm:text-left">
+                        <h1 class="font-heading font-bold text-2xl text-foreground mb-1">
+                            {% if app.user.firstname or app.user.lastname %}
+                                {{ app.user.firstname }} {{ app.user.lastname }}
+                            {% elseif app.user.pseudo %}
+                                {{ app.user.pseudo }}
+                            {% else %}
+                                Mon compte
+                            {% endif %}
+                        </h1>
+                        <p class="text-muted-foreground text-sm font-body mb-3">{{ app.user.email }}</p>
+
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                            {# Badge vérifié #}
+                            {% if app.user.isVerified %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                                      style="background-color: hsl(142 72% 50% / 0.12); color: hsl(142 72% 35%); border: 1px solid hsl(142 72% 50% / 0.25);">
+                                    <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    Email vérifié
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                                      style="background-color: hsl(var(--gold) / 0.12); color: hsl(40 80% 40%); border: 1px solid hsl(var(--gold) / 0.30);">
+                                    <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    </svg>
+                                    Email non vérifié
+                                </span>
+                            {% endif %}
+
+                            {# Badge membre depuis #}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                                  style="background-color: hsl(var(--accent) / 0.12); color: hsl(var(--accent-foreground)); border: 1px solid hsl(var(--accent) / 0.25);">
+                                <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Membre depuis {{ app.user.createdAt|format_date(pattern: 'MMMM yyyy', locale: 'fr')|capitalize }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# ================================================================
+               GRILLE : 2 colonnes sur desktop
+            ================================================================ #}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {# ────────────────────────────────────────────────────────────
+                   CARTE — Informations personnelles
+                ──────────────────────────────────────────────────────────── #}
+                <div class="bg-white rounded-2xl border border-border p-6 shadow-sm">
+
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                             style="background-color: hsl(var(--primary) / 0.10);">
+                            <svg class="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="font-heading font-bold text-lg text-foreground">Informations personnelles</h2>
+                            <p class="text-xs text-muted-foreground font-body">Prénom, nom et pseudo d'affichage</p>
+                        </div>
+                    </div>
+
+                    {# Flash succès profil #}
+                    {% for msg in app.flashes('success_profile') %}
+                        <div class="flex items-center gap-3 p-3 mb-5 rounded-xl"
+                             style="background-color: hsl(142 72% 50% / 0.10); border: 1px solid hsl(142 72% 50% / 0.25);">
+                            <svg class="w-4 h-4 shrink-0" style="color: hsl(142 72% 40%);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <p class="text-sm font-medium" style="color: hsl(142 72% 35%);">{{ msg }}</p>
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(profileForm, {
+                        action: path('app_profile_info'),
+                        attr: { class: 'space-y-4', novalidate: 'novalidate' }
+                    }) }}
+
+                        {# Prénom + Nom — 2 colonnes #}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                {{ form_label(profileForm.firstname, null, {
+                                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                                }) }}
+                                {{ form_widget(profileForm.firstname, {
+                                    attr: {
+                                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                                        placeholder: 'Jean'
+                                    }
+                                }) }}
+                                {% for error in profileForm.firstname.vars.errors %}
+                                    <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                {{ form_label(profileForm.lastname, null, {
+                                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                                }) }}
+                                {{ form_widget(profileForm.lastname, {
+                                    attr: {
+                                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                                        placeholder: 'Dupont'
+                                    }
+                                }) }}
+                                {% for error in profileForm.lastname.vars.errors %}
+                                    <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {# Pseudo #}
+                        <div>
+                            {{ form_label(profileForm.pseudo, null, {
+                                label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                            }) }}
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                    <span class="text-muted-foreground text-sm font-mono">@</span>
+                                </div>
+                                {{ form_widget(profileForm.pseudo, {
+                                    attr: {
+                                        class: 'w-full pl-8 pr-4 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                                        placeholder: 'mon_pseudo'
+                                    }
+                                }) }}
+                            </div>
+                            {% for error in profileForm.pseudo.vars.errors %}
+                                <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                            {% endfor %}
+                        </div>
+
+                        {# Toggle isPseudoDisplayed #}
+                        <div class="flex items-start gap-3 p-3.5 rounded-xl"
+                             style="background-color: hsl(var(--muted) / 0.50); border: 1px solid hsl(var(--border));">
+                            {{ form_widget(profileForm.isPseudoDisplayed, {
+                                attr: {
+                                    class: 'mt-0.5 h-4 w-4 rounded cursor-pointer shrink-0',
+                                    style: 'accent-color: hsl(var(--primary));'
+                                }
+                            }) }}
+                            <div>
+                                {{ form_label(profileForm.isPseudoDisplayed, null, {
+                                    label_attr: { class: 'block text-sm font-semibold text-foreground cursor-pointer' }
+                                }) }}
+                                <p class="text-xs text-muted-foreground mt-0.5 font-body">
+                                    Si activé, votre pseudo sera affiché à la place de votre prénom/nom.
+                                </p>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Sauvegarder
+                        </button>
+
+                    {{ form_end(profileForm) }}
+                </div>
+
+                {# ────────────────────────────────────────────────────────────
+                   CARTE — Sécurité / Mot de passe
+                ──────────────────────────────────────────────────────────── #}
+                <div class="bg-white rounded-2xl border border-border p-6 shadow-sm">
+
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                             style="background-color: hsl(var(--accent) / 0.12);">
+                            <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="font-heading font-bold text-lg text-foreground">Sécurité</h2>
+                            <p class="text-xs text-muted-foreground font-body">Modifier votre mot de passe</p>
+                        </div>
+                    </div>
+
+                    {# Flash succès mot de passe #}
+                    {% for msg in app.flashes('success_password') %}
+                        <div class="flex items-center gap-3 p-3 mb-5 rounded-xl"
+                             style="background-color: hsl(142 72% 50% / 0.10); border: 1px solid hsl(142 72% 50% / 0.25);">
+                            <svg class="w-4 h-4 shrink-0" style="color: hsl(142 72% 40%);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <p class="text-sm font-medium" style="color: hsl(142 72% 35%);">{{ msg }}</p>
+                        </div>
+                    {% endfor %}
+
+                    {# Flash erreur mot de passe #}
+                    {% for msg in app.flashes('error_password') %}
+                        <div class="flex items-center gap-3 p-3 mb-5 rounded-xl"
+                             style="background-color: hsl(var(--destructive) / 0.07); border: 1px solid hsl(var(--destructive) / 0.30);">
+                            <svg class="w-4 h-4 shrink-0" style="color: hsl(var(--destructive));" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <p class="text-sm font-medium" style="color: hsl(var(--destructive));">{{ msg }}</p>
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(changePasswordForm, {
+                        action: path('app_profile_password'),
+                        attr: { class: 'space-y-4', novalidate: 'novalidate' }
+                    }) }}
+
+                        {% for field in [changePasswordForm.currentPassword, changePasswordForm.newPassword, changePasswordForm.confirmPassword] %}
+                            <div>
+                                {{ form_label(field, null, {
+                                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                                }) }}
+                                <div class="relative" data-controller="password-toggle">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                        <svg class="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        </svg>
+                                    </div>
+                                    {{ form_widget(field, {
+                                        attr: {
+                                            'data-password-toggle-target': 'input',
+                                            class: 'w-full pl-10 pr-12 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                                            style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                                            placeholder: '••••••••'
+                                        }
+                                    }) }}
+                                    <button type="button"
+                                            data-action="click->password-toggle#toggle"
+                                            data-password-toggle-target="button"
+                                            aria-label="Afficher le mot de passe"
+                                            aria-pressed="false"
+                                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muted-foreground hover:text-foreground transition-colors focus:outline-none">
+                                        <svg data-password-toggle-target="iconShow" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        <svg data-password-toggle-target="iconHide" class="h-4 w-4 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                            <line x1="1" y1="1" x2="23" y2="23"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                {% for error in field.vars.errors %}
+                                    <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit"
+                                class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                style="background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            Modifier le mot de passe
+                        </button>
+
+                    {{ form_end(changePasswordForm) }}
+                </div>
+
+            </div>{# /grid #}
+        </div>
+    </main>
+
+    {% include 'partials/_footer.html.twig' %}
+
+</div>
+{% endblock %}

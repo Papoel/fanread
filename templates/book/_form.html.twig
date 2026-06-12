@@ -1,0 +1,139 @@
+{#
+    templates/book/_form.html.twig
+    Variables : form (BookFormType)
+#}
+
+<div class="bg-white rounded-2xl border shadow-sm p-6"
+     style="border-color: hsl(var(--primary) / 0.20); box-shadow: 0 4px 20px hsl(var(--primary) / 0.08);">
+
+    {# En-tête #}
+    <div class="mb-6 pb-5 border-b" style="border-color: hsl(var(--border));">
+        <h2 class="font-heading font-bold text-xl text-primary">Ajouter une nouvelle lecture</h2>
+        <p class="text-sm text-muted-foreground mt-1 font-body">
+            Remplissez les détails ou recherchez par ISBN.
+        </p>
+    </div>
+
+    {{ form_start(form, { attr: { class: 'space-y-5', novalidate: 'novalidate' } }) }}
+
+        {# ── ISBN + bouton recherche (fonctionnalité step-06) ── #}
+        <div>
+            {{ form_label(form.isbn, null, {
+                label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+            }) }}
+            <div class="flex gap-2">
+                {{ form_widget(form.isbn, {
+                    attr: {
+                        class: 'flex-1 px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                    }
+                }) }}
+                {# Bouton recherche ISBN — à activer en step-06 #}
+                <button type="button"
+                        disabled
+                        title="Disponible prochainement"
+                        class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all opacity-60 cursor-not-allowed"
+                        style="background-color: hsl(var(--muted)); color: hsl(var(--muted-foreground));">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <span class="hidden sm:inline">Rechercher</span>
+                </button>
+            </div>
+            {% for error in form.isbn.vars.errors %}
+                <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+            {% endfor %}
+        </div>
+
+        {# ── Titre + Auteur ── #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+                {{ form_label(form.title, null, {
+                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                }) }}
+                {{ form_widget(form.title, {
+                    attr: {
+                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                    }
+                }) }}
+                {% for error in form.title.vars.errors %}
+                    <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form_label(form.author, null, {
+                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                }) }}
+                {{ form_widget(form.author, {
+                    attr: {
+                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                    }
+                }) }}
+            </div>
+        </div>
+
+        {# ── Pages + Catégorie ── #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+                {{ form_label(form.totalPages, null, {
+                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                }) }}
+                {{ form_widget(form.totalPages, {
+                    attr: {
+                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                    }
+                }) }}
+                {% for error in form.totalPages.vars.errors %}
+                    <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form_label(form.category, null, {
+                    label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                }) }}
+                {{ form_widget(form.category, {
+                    attr: {
+                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                    }
+                }) }}
+            </div>
+        </div>
+
+        {# ── URL couverture ── #}
+        <div>
+            {{ form_label(form.coverUrl, null, {
+                label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+            }) }}
+            {{ form_widget(form.coverUrl, {
+                attr: {
+                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                }
+            }) }}
+        </div>
+
+        {# ── Actions ── #}
+        <div class="flex gap-3 pt-2">
+            <button type="submit"
+                    class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-base transition-all duration-300 active:scale-95 shadow-primary-lg"
+                    style="background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                    <polyline points="17 21 17 13 7 13 7 21"/>
+                </svg>
+                Enregistrer le livre
+            </button>
+            <button type="button"
+                    data-action="click->collapsible#toggle"
+                    class="px-6 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 hover:bg-muted"
+                    style="border-color: hsl(var(--border)); color: hsl(var(--foreground));">
+                Annuler
+            </button>
+        </div>
+
+    {{ form_end(form) }}
+</div>
