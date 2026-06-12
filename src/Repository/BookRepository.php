@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Book;
+use App\Entity\User;
+use App\Enum\Book\Category;
+use App\Enum\Book\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +19,67 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
-    //    /**
-    //     * @return Book[] Returns an array of Book objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * @return list<Book>
+     */
+    public function findByUser(User $user): array
+    {
+        /** @var list<Book> $result */
+        $result = $this->createQueryBuilder('b')
+            ->where('b.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('b.addedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
 
-    //    public function findOneBySomeField($value): ?Book
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $result;
+    }
+
+    /**
+     * Filtre + trie les livres d'un utilisateur.
+     *
+     * @return list<Book>
+     */
+    public function findByUserFiltered(
+        User    $user,
+        string  $tab      = 'all',
+        string  $status   = 'all',
+        string  $category = 'all',
+        string  $sort     = 'recent'
+    ): array {
+        $qb = $this->createQueryBuilder('b')
+            ->where('b.user = :user')
+            ->setParameter('user', $user);
+
+        if ($tab === 'favorites') {
+            $qb->andWhere('b.isFavorite = true');
+        }
+
+        if ($status !== 'all') {
+            $statusEnum = Status::tryFrom($status);
+            if ($statusEnum) {
+                $qb->andWhere('b.status = :status')
+                    ->setParameter('status', $statusEnum->value);
+            }
+        }
+
+        if ($category !== 'all') {
+            $categoryEnum = Category::tryFrom($category);
+            if ($categoryEnum) {
+                $qb->andWhere('b.category = :category')
+                    ->setParameter('category', $categoryEnum->value);
+            }
+        }
+
+        match ($sort) {
+            'title'  => $qb->orderBy('b.title', 'ASC'),
+            'rating' => $qb->orderBy('b.rating', 'DESC')->addOrderBy('b.addedAt', 'DESC'),
+            default  => $qb->orderBy('b.addedAt', 'DESC'),
+        };
+
+        /** @var list<Book> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
 }

@@ -9,9 +9,17 @@ use App\Entity\User;
 
 interface BookServiceInterface
 {
-    /**
-     * Crée un livre et l'associe à un utilisateur.
-     * Initialise les valeurs par défaut (addedAt, pagesRead, isFavorite, status).
-     */
     public function create(Book $book, User $user): Book;
+
+    /** @return Book[] */
+    public function findByUser(User $user): array;
+
+    /** @return Book[] */
+    public function findByUserFiltered(
+        User   $user,
+        string $tab      = 'all',
+        string $status   = 'all',
+        string $category = 'all',
+        string $sort     = 'recent'
+    ): array;
 }

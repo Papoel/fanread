@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\User;
 
+use App\Entity\User;
 use App\Form\User\ChangePasswordFormType;
 use App\Form\User\ProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +33,7 @@ class ProfileController extends AbstractController
     #[Route('/profil/informations', name: 'app_profile_info', methods: ['POST'])]
     public function updateInfo(Request $request, EntityManagerInterface $em): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
         $form = $this->createForm(ProfileFormType::class, $user);
         $form->handleRequest($request);
@@ -39,7 +41,7 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
-            $this->addFlash('success_profile', 'Vos informations ont été mises à jour.');
+            $this->addFlash('info', 'Profil mis à jour.');
         }
 
         return $this->redirectToRoute('app_profile');
@@ -51,13 +53,17 @@ class ProfileController extends AbstractController
         UserPasswordHasherInterface $hasher,
         EntityManagerInterface $em
     ): Response {
+        /** @var User $user */
         $user = $this->getUser();
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var string $current */
             $current = $form->get('currentPassword')->getData();
+            /** @var string $new */
             $new     = $form->get('newPassword')->getData();
+            /** @var string $confirm */
             $confirm = $form->get('confirmPassword')->getData();
 
             if (!$hasher->isPasswordValid($user, $current)) {

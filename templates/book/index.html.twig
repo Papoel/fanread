@@ -94,29 +94,20 @@
                     </div>
 
                     {# Filtre statut #}
-                    {% set filterStatus = filterStatus|default('all') %}
-                    <select name="status"
-                            data-action="change->auto-submit#submit"
-                            class="w-full sm:w-[160px] bg-background border border-primary/20 font-medium
-                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-                        <option value="all"       {{ filterStatus == 'all'       ? 'selected' : '' }}>Tous les statuts</option>
-                        <option value="en cours"  {{ filterStatus == 'en cours'  ? 'selected' : '' }}>En cours</option>
-                        <option value="terminé"   {{ filterStatus == 'terminé'   ? 'selected' : '' }}>Terminés</option>
+                    <select name="status" data-action="change->auto-submit#submit" class="...">
+                        <option value="all"     {{ filterStatus == 'all'     ? 'selected' : '' }}>Tous les statuts</option>
+                        <option value="non_commence" {{ filterStatus == 'non_commence' ? 'selected' : '' }}>Non commencé</option>
+                        <option value="en_cours"{{ filterStatus == 'en_cours'? 'selected' : '' }}>En cours</option>
+                        <option value="termine" {{ filterStatus == 'termine' ? 'selected' : '' }}>Terminés</option>
                     </select>
 
-                    {# Filtre catégorie #}
-                    {% set filterCategory = filterCategory|default('Toutes catégories') %}
-                    {% set categories = [
-                        'Toutes catégories', 'Non classé', 'Romance', 'Fantasy', 'Thriller',
-                        'Développement personnel', 'Science-fiction', 'Mystère', 'Jeunesse', 'Classique'
-                    ] %}
-                    <select name="category"
-                            data-action="change->auto-submit#submit"
-                            class="w-full sm:w-[180px] bg-background border border-primary/20 font-medium
-                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                    {# Filtre catégorie — depuis le controller via Category::cases() #}
+                    <select name="category" data-action="change->auto-submit#submit" class="...">
+                        <option value="all" {{ filterCategory == 'all' ? 'selected' : '' }}>Toutes catégories</option>
                         {% for cat in categories %}
-                            <option value="{{ cat }}" {{ filterCategory == cat ? 'selected' : '' }}>
-                                {{ cat }}
+                            <option value="{{ cat.value }}"
+                                {{ filterCategory == cat.value ? 'selected' : '' }}>
+                                {{ cat.label() }}
                             </option>
                         {% endfor %}
                     </select>
@@ -181,7 +172,7 @@
                         {% if activeTab == 'favorites' %}
                             Vous n'avez pas encore ajouté de livres à vos favoris.
                             Cliquez sur le cœur d'un livre pour l'ajouter.
-                        {% elseif filterStatus != 'all' or filterCategory != 'Toutes catégories' %}
+                        {% elseif filterStatus != 'all' or filterCategory != 'all' %}
                             Aucun livre ne correspond à vos filtres actuels.
                         {% else %}
                             Votre bibliothèque est encore vide. Commencez par ajouter une lecture !
@@ -189,7 +180,7 @@
                     </p>
 
                     {# CTA : ajouter le premier livre #}
-                    {% if activeTab == 'all' and filterStatus == 'all' and filterCategory == 'Toutes catégories' %}
+                    {% if activeTab == 'all' and filterStatus == 'all' and filterCategory == 'all' %}
                         <a href="{{ path('app_book', {'showForm': 1}) }}"
                            class="inline-flex items-center bg-primary hover:bg-primary/90 text-white
                                   rounded-xl shadow-lg shadow-primary/20 transition-all duration-300
@@ -205,7 +196,7 @@
                     {% endif %}
 
                     {# CTA : réinitialiser les filtres #}
-                    {% if filterStatus != 'all' or filterCategory != 'Toutes catégories' %}
+                    {% if filterStatus != 'all' or filterCategory != 'all' %}
                         <a href="{{ path('app_book', {'tab': activeTab}) }}"
                            class="inline-flex items-center rounded-xl border border-primary/20 text-primary
                                   hover:bg-primary/5 font-semibold px-6 py-2 transition-all">
@@ -219,7 +210,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {% for book in sortedBooks %}
-                        {% include 'book/_book_card.html.twig' with { book: book } only %}
+                        {{ component('BookCardComponent', { book: book }) }}
                     {% endfor %}
                 </div>
 
@@ -232,6 +223,4 @@
 
 </div>
 
-{# Modal review — géré par votre propre implémentation Bootstrap/Twig #}
-{# {% include 'book/_review_modal.html.twig' %} #}
 {% endblock %}

@@ -1,0 +1,11 @@
+<div {{ attributes }}
+     {% if toasts is not empty %}data-poll="delay(2400)|prune"{% endif %}
+     class="fixed top-6 right-6 z-toast flex flex-col gap-2 pointer-events-none w-80 max-w-[calc(100vw-3rem)]"
+     aria-live="polite">
+
+    {% for toast in toasts %}
+        {% include 'partials/notification/_' ~ toast.type ~ '.html.twig'
+           with { message: toast.message, id: toast.id } only %}
+    {% endfor %}
+
+</div>
