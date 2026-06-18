@@ -19,5 +19,6 @@ services:
     App\:
         resource: '../src/'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Services\Book\Isbn\Api\GoogleBooksService:
+        arguments:
+            $googleBooksKey: '%env(GOOGLE_BOOKS_API_KEY)%'

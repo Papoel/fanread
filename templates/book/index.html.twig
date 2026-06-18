@@ -64,7 +64,7 @@
 
                 <div data-collapsible-target="content"
                     class="{{ showForm ? '' : 'hidden' }} pt-2 pb-6">
-                    {% include 'book/_form.html.twig' with { form: bookForm } only %}
+                    {{ component('ApiSearchComponent') }}
                 </div>
 
             </div>

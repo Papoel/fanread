@@ -1,11 +1,5 @@
-{#
-    templates/book/_form.html.twig
-    Variables : form (BookFormType)
-#}
-
-<div class="bg-white rounded-2xl border shadow-sm p-6"
-     data-controller="isbn"
-     data-isbn-url-value="{{ path('app_book_isbn_search') }}"
+<div {{ attributes }}
+     class="bg-white rounded-2xl border shadow-sm p-6"
      style="border-color: hsl(var(--primary) / 0.20); box-shadow: 0 4px 20px hsl(var(--primary) / 0.08);">
 
     {# En-tête #}
@@ -16,38 +10,48 @@
         </p>
     </div>
 
-    {{ form_start(form, { attr: { class: 'space-y-5', novalidate: 'novalidate' } }) }}
+    {{ form_start(form, { attr: {
+        'data-action': 'live#action:prevent',
+        'data-live-action-param': 'save',
+        class: 'space-y-5',
+        novalidate: 'novalidate'
+    } }) }}
 
-        {# ── ISBN + bouton recherche (fonctionnalité step-06) ── #}
+        {# ── ISBN + bouton loupe ── #}
         <div>
             {{ form_label(form.isbn, null, {
                 label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
             }) }}
             <div class="relative">
-                {{ form_widget(form.isbn, {
-                    attr: {
-                        'data-isbn-target': 'isbn',
-                        class: 'w-full pr-12 px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                    }
-                }) }}
+                {{ form_widget(form.isbn, { attr: {
+                    class: 'w-full pr-12 px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                } }) }}
                 <button type="button"
-                        data-action="isbn#search"
-                        data-isbn-target="button"
+                        data-action="live#action:prevent"
+                        data-live-action-param="search"
                         title="Rechercher via Google Books"
                         class="absolute inset-y-0 right-0 flex items-center justify-center w-11 rounded-r-xl
                             text-muted-foreground hover:text-primary transition-colors active:scale-95">
                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                         stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
                 </button>
             </div>
+
             {% for error in form.isbn.vars.errors %}
                 <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
             {% endfor %}
 
-            <p data-isbn-target="status" class="mt-1 text-xs font-medium" aria-live="polite"></p>
+            {% if statusMessage %}
+                <p class="mt-1 text-xs font-medium" aria-live="polite"
+                   style="color: {{ statusType == 'error'
+                        ? 'hsl(var(--destructive))'
+                        : (statusType == 'success' ? 'hsl(var(--secondary))' : 'hsl(var(--muted-foreground))') }};">
+                    {{ statusMessage }}
+                </p>
+            {% endif %}
         </div>
 
         {# ── Titre + Auteur ── #}
@@ -56,12 +60,10 @@
                 {{ form_label(form.title, null, {
                     label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
                 }) }}
-                {{ form_widget(form.title, {
-                    attr: {
-                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                    }
-                }) }}
+                {{ form_widget(form.title, { attr: {
+                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                } }) }}
                 {% for error in form.title.vars.errors %}
                     <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
                 {% endfor %}
@@ -70,12 +72,10 @@
                 {{ form_label(form.author, null, {
                     label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
                 }) }}
-                {{ form_widget(form.author, {
-                    attr: {
-                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                    }
-                }) }}
+                {{ form_widget(form.author, { attr: {
+                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                } }) }}
             </div>
         </div>
 
@@ -85,12 +85,10 @@
                 {{ form_label(form.totalPages, null, {
                     label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
                 }) }}
-                {{ form_widget(form.totalPages, {
-                    attr: {
-                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                    }
-                }) }}
+                {{ form_widget(form.totalPages, { attr: {
+                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                } }) }}
                 {% for error in form.totalPages.vars.errors %}
                     <p class="mt-1 text-xs font-medium" style="color: hsl(var(--destructive));">{{ error.message }}</p>
                 {% endfor %}
@@ -99,12 +97,10 @@
                 {{ form_label(form.category, null, {
                     label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
                 }) }}
-                {{ form_widget(form.category, {
-                    attr: {
-                        class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                        style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                    }
-                }) }}
+                {{ form_widget(form.category, { attr: {
+                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+                } }) }}
             </div>
         </div>
 
@@ -113,12 +109,10 @@
             {{ form_label(form.coverUrl, null, {
                 label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
             }) }}
-            {{ form_widget(form.coverUrl, {
-                attr: {
-                    class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
-                    style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
-                }
-            }) }}
+            {{ form_widget(form.coverUrl, { attr: {
+                class: 'w-full px-3.5 py-2.5 rounded-xl border text-sm font-body text-foreground bg-white focus:outline-none focus:ring-2 focus:ring-offset-0 transition-all',
+                style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);'
+            } }) }}
         </div>
 
         {# ── Actions ── #}
@@ -131,12 +125,6 @@
                     <polyline points="17 21 17 13 7 13 7 21"/>
                 </svg>
                 Enregistrer le livre
-            </button>
-            <button type="button"
-                    data-action="click->collapsible#toggle"
-                    class="px-6 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 hover:bg-muted"
-                    style="border-color: hsl(var(--border)); color: hsl(var(--foreground));">
-                Annuler
             </button>
         </div>
 
