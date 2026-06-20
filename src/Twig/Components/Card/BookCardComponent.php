@@ -127,8 +127,8 @@ class BookCardComponent
         if ($found->author) {
             $this->book->setAuthor($found->author);
         }
-        if (!empty($found->data['pageCount'])) {
-            $this->book->setTotalPages((int) $found->data['pageCount']);
+        if (null !== ($pageCount = $found->getPageCount())) {
+            $this->book->setTotalPages($pageCount);
         }
         if ($found->imageUrl) {
             $this->book->setCoverUrl($found->imageUrl);

@@ -58,7 +58,8 @@ class ApiSearchComponent
     #[LiveAction]
     public function search(): void
     {
-        $isbn = trim((string) ($this->formValues['isbn'] ?? ''));
+        $rawIsbn = $this->formValues['isbn'] ?? '';
+        $isbn = trim(is_string($rawIsbn) ? $rawIsbn : '');
 
         if ($isbn === '') {
             $this->setStatus('error', 'Veuillez entrer un ISBN.');
@@ -76,7 +77,7 @@ class ApiSearchComponent
         $this->fillIfEmpty('title', $found->title);
         $this->fillIfEmpty('author', $found->author);
         $this->fillIfEmpty('coverUrl', $found->imageUrl);
-        $this->fillIfEmpty('totalPages', $found->data['pageCount'] ?? null);
+        $this->fillIfEmpty('totalPages', $found->getPageCount());
 
         $this->setStatus('success', 'Informations trouvées avec succès !');
     }

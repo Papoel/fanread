@@ -48,7 +48,7 @@ class ApiBookController extends AbstractController
     #[Route('/search', name: 'search', methods: ['POST'])]
     public function search(Request $request): Response
     {
-        $isbn = $request->request->get('isbn');
+        $isbn = (string) $request->request->get('isbn');
 
         if (!$isbn) {
             return new JsonResponse(

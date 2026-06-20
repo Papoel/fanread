@@ -63,15 +63,24 @@ class GoogleBooksService implements IsbnProviderInterface
 
             $this->logger->info('Livre Google Books récupéré', ['isbn' => $isbn]);
 
-            $item       = $data['items'][0];
-            $volumeInfo = $item['volumeInfo'] ?? [];
-
-            // pageCount souvent absent dans la recherche → on enrichit via la fiche complète
-            if (empty($volumeInfo['pageCount']) && !empty($item['id'])) {
-                $volumeInfo = $this->fetchVolumeDetails((string) $item['id']) ?? $volumeInfo;
+            $items = $data['items'];
+            $item  = is_array($items) ? ($items[0] ?? null) : null;
+            if (!is_array($item)) {
+                throw new IsbnApiException(
+                    sprintf('Aucun livre trouvé pour l\'ISBN: %s', $isbn)
+                );
             }
 
-return $this->mapToBookData($isbn, $volumeInfo);
+            /** @var array<string, mixed> $volumeInfo */
+            $volumeInfo = is_array($item['volumeInfo'] ?? null) ? $item['volumeInfo'] : [];
+
+            // pageCount souvent absent dans la recherche → on enrichit via la fiche complète
+            $volumeId = $item['id'] ?? null;
+            if (empty($volumeInfo['pageCount']) && is_string($volumeId) && $volumeId !== '') {
+                $volumeInfo = $this->fetchVolumeDetails($volumeId) ?? $volumeInfo;
+            }
+
+            return $this->mapToBookData($isbn, $volumeInfo);
 
         } catch (\Throwable $e) {
             $this->logger->error('Erreur Google Books', [
@@ -89,7 +98,7 @@ return $this->mapToBookData($isbn, $volumeInfo);
 
     public function isValidIsbn(string $isbn): bool
     {
-        $isbn = preg_replace('/[^0-9X]/', '', strtoupper($isbn));
+        $isbn = preg_replace('/[^0-9X]/', '', strtoupper($isbn)) ?? '';
 
         return match (strlen($isbn)) {
             10 => $this->validateIsbn10($isbn),
@@ -98,6 +107,9 @@ return $this->mapToBookData($isbn, $volumeInfo);
         };
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function fetchVolumeDetails(string $volumeId): ?array
     {
         try {
@@ -120,23 +132,33 @@ return $this->mapToBookData($isbn, $volumeInfo);
                 return null;
             }
 
-            return $response->toArray()['volumeInfo'] ?? null;
+            /** @var array<string, mixed>|null $volumeInfo */
+            $volumeInfo = $response->toArray()['volumeInfo'] ?? null;
+
+            return is_array($volumeInfo) ? $volumeInfo : null;
         } catch (\Throwable) {
             return null;
         }
     }
 
+    /**
+     * @param array<string, mixed> $volumeInfo
+     */
     private function mapToBookData(string $isbn, array $volumeInfo): BookData
     {
+        $authors    = $volumeInfo['authors'] ?? null;
+        $imageLinks = $volumeInfo['imageLinks'] ?? null;
+        $thumbnail  = is_array($imageLinks) ? ($imageLinks['thumbnail'] ?? null) : null;
+
         return new BookData(
             isbn: $isbn,
-            title: $volumeInfo['title'] ?? 'Unknown',
-            author: isset($volumeInfo['authors'])
-                ? implode(', ', $volumeInfo['authors'])
+            title: is_string($volumeInfo['title'] ?? null) ? $volumeInfo['title'] : 'Unknown',
+            author: is_array($authors) && ($names = array_filter($authors, 'is_string')) !== []
+                ? implode(', ', $names)
                 : null,
-            publisher: $volumeInfo['publisher'] ?? null,
-            publishDate: $volumeInfo['publishedDate'] ?? null,
-            imageUrl: $volumeInfo['imageLinks']['thumbnail'] ?? null,
+            publisher: is_string($volumeInfo['publisher'] ?? null) ? $volumeInfo['publisher'] : null,
+            publishDate: is_string($volumeInfo['publishedDate'] ?? null) ? $volumeInfo['publishedDate'] : null,
+            imageUrl: is_string($thumbnail) ? $thumbnail : null,
             data: $volumeInfo,
         );
     }
