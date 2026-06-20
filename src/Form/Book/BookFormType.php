@@ -9,13 +9,14 @@ use App\Enum\Book\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
-use Symfony\Component\Validator\Constraints\Length;
 
 class BookFormType extends AbstractType
 {
@@ -63,6 +64,15 @@ class BookFormType extends AbstractType
                 'required'    => false,
                 'default_protocol' => 'https',
                 'attr'        => ['placeholder' => 'https://...'],
+            ])
+            ->add('description', TextareaType::class, [
+                'label'    => 'Description',
+                'required' => false,
+                'help'     => 'Laissez ce champ vide pour récupérer automatiquement la description de Google Books lors de la recherche par ISBN. Si vous écrivez votre propre description, elle sera conservée ; effacez son contenu pour rappatrier celle de l\'API.',
+                'attr'     => [
+                    'placeholder' => 'Description du livre (ou laissez vide pour utiliser celle de Google Books)',
+                    'rows'        => 5,
+                ],
             ])
         ;
     }

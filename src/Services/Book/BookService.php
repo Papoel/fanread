@@ -47,4 +47,9 @@ final class BookService implements BookServiceInterface
     ): array {
         return $this->bookRepository->findByUserFiltered($user, $tab, $status, $category, $sort);
     }
+
+    public function countByUser(User $user): int
+    {
+        return $this->bookRepository->countByUser($user);
+    }
 }

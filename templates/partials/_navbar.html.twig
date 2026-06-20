@@ -28,8 +28,10 @@
                        : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
                     Mes Livres
                 </a>
-                <a href="#"
-                   class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 text-muted-foreground hover:text-rose-600 hover:bg-red-50">
+                <a href="{{ path('app_statistics') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200
+                {{ app.request.attributes.get('_route') == 'app_statistics'
+                    ? 'bg-red-50 text-rose-600'
+                    : 'text-muted-foreground hover:text-rose-600 hover:bg-red-50' }}">
                     Statistiques
                 </a>
             </nav>

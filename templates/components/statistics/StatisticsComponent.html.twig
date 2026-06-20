@@ -1,0 +1,63 @@
+<div {{ attributes }} class="space-y-8">
+
+    {# ── KPI ─────────────────────────────────────────────── #}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {% set kpis = [
+            { label: 'Livres au total', value: totalBooks, color: 'hsl(var(--primary))' },
+            { label: 'Terminés',        value: finishedCount, color: '#22c55e' },
+            { label: 'En cours',        value: inProgressCount, color: '#fb923c' },
+            { label: 'Favoris',         value: favoritesCount, color: '#f43f5e' },
+            { label: 'Pages lues',      value: totalPagesRead, color: 'hsl(var(--secondary))' },
+            { label: 'Non commencés',   value: notStartedCount, color: '#94a3b8' },
+            { label: 'Note moyenne',    value: averageRating ~ ' / 5', color: '#eab308' },
+        ] %}
+        {% for kpi in kpis %}
+            <div class="rounded-2xl border border-border bg-white p-5 shadow-primary">
+                <p class="text-sm font-medium text-muted-foreground">{{ kpi.label }}</p>
+                <p class="mt-1 text-3xl font-bold font-heading" style="color: {{ kpi.color }};">{{ kpi.value }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if totalBooks == 0 %}
+        <div class="rounded-2xl border border-border bg-white p-10 text-center text-muted-foreground">
+            Aucun livre pour le moment. Ajoutez des lectures pour voir vos statistiques.
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            {# ── Répartition par statut ── #}
+            <div class="rounded-2xl border border-border bg-white p-6 shadow-primary">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-heading font-bold text-foreground text-lg">Répartition par statut</h3>
+                    <select data-model="statusChartType"
+                            class="rounded-xl border border-border bg-background px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/30">
+                        <option value="doughnut">Anneau</option>
+                        <option value="pie">Camembert</option>
+                        <option value="bar">Barres</option>
+                    </select>
+                </div>
+                <div class="relative h-72" id="status-chart-{{ statusChartType }}">
+                    {{ render_chart(this.statusChart) }}
+                </div>
+            </div>
+
+            {# ── Top catégories ── #}
+            <div class="rounded-2xl border border-border bg-white p-6 shadow-primary">
+                <h3 class="font-heading font-bold text-foreground text-lg mb-4">Top catégories</h3>
+                <div class="relative h-72">
+                    {{ render_chart(this.categoryChart) }}
+                </div>
+            </div>
+
+            {# ── Ajouts par mois ── #}
+            <div class="rounded-2xl border border-border bg-white p-6 shadow-primary lg:col-span-2">
+                <h3 class="font-heading font-bold text-foreground text-lg mb-4">Livres ajoutés cette année</h3>
+                <div class="relative h-72">
+                    {{ render_chart(this.monthlyChart) }}
+                </div>
+            </div>
+
+        </div>
+    {% endif %}
+</div>

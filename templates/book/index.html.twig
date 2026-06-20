@@ -64,7 +64,7 @@
 
                 <div data-collapsible-target="content"
                     class="{{ showForm ? '' : 'hidden' }} pt-2 pb-6">
-                    {% include 'book/_form.html.twig' with { form: bookForm } only %}
+                    {{ component('ApiSearchComponent') }}
                 </div>
 
             </div>
@@ -94,7 +94,10 @@
                     </div>
 
                     {# Filtre statut #}
-                    <select name="status" data-action="change->auto-submit#submit" class="...">
+                    <select name="status"
+                            data-action="change->auto-submit#submit"
+                            class="w-full sm:w-[160px] bg-background border border-primary/20 font-medium
+                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
                         <option value="all"     {{ filterStatus == 'all'     ? 'selected' : '' }}>Tous les statuts</option>
                         <option value="non_commence" {{ filterStatus == 'non_commence' ? 'selected' : '' }}>Non commencé</option>
                         <option value="en_cours"{{ filterStatus == 'en_cours'? 'selected' : '' }}>En cours</option>
@@ -102,7 +105,10 @@
                     </select>
 
                     {# Filtre catégorie — depuis le controller via Category::cases() #}
-                    <select name="category" data-action="change->auto-submit#submit" class="...">
+                    <select name="category"
+                            data-action="change->auto-submit#submit"
+                            class="w-full sm:w-[160px] bg-background border border-primary/20 font-medium
+                                   rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
                         <option value="all" {{ filterCategory == 'all' ? 'selected' : '' }}>Toutes catégories</option>
                         {% for cat in categories %}
                             <option value="{{ cat.value }}"
