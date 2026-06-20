@@ -52,6 +52,7 @@ final class BookController extends AbstractController
             'filterStatus'   => $filterStatus,
             'filterCategory' => $filterCategory,
             'sortBy'         => $sortBy,
+            'books'          => $this->bookService->countByUser($user),
             'sortedBooks'    => $this->bookService->findByUserFiltered(
                 $user,
                 $activeTab,

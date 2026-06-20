@@ -22,4 +22,6 @@ interface BookServiceInterface
         string $category = 'all',
         string $sort     = 'recent'
     ): array;
+
+    public function countByUser(User $user): int;
 }

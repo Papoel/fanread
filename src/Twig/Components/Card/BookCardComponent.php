@@ -107,10 +107,16 @@ class BookCardComponent
     }
 
     #[LiveAction]
-    public function setRating(#[LiveArg] int $rating): void
+    public function setRating(#[LiveArg] int $rating, EntityManagerInterface $em): void
     {
         $this->assertOwnership();
         $this->book->setRating(max(0, min(5, $rating)));
+        $em->flush();
+
+        $this->emit('book:toast', [
+            'type'    => 'success',
+            'message' => 'Note enregistrée.',
+        ]);
     }
 
     #[LiveAction]

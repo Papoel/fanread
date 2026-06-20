@@ -82,4 +82,14 @@ class BookRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    public function countByUser(User $user): int
+    {
+        return (int) $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->where('b.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -130,6 +130,9 @@
     .text-foreground {
         color: hsl(var(--foreground));
     }
+    .text-foreground\/80 {
+        color: hsl(var(--foreground) / .8);
+    }
     .text-muted-foreground {
         color: hsl(var(--muted-foreground));
     }
@@ -143,6 +146,9 @@
     }
     .bg-accent {
         background-color: hsl(var(--accent));
+    }
+    .bg-accent\/10 {
+        background-color: hsl(var(--accent) / .1);
     }
     .bg-background {
         background-color: hsl(var(--background));
@@ -216,6 +222,19 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+    }
+
+    /* ── Details/Summary ── */
+    .review-toggle .review-full {
+        display: none;
+    }
+
+    .review-toggle[open] .review-short {
+         display: none;
+    }
+
+    .review-toggle[open] .review-full {
+         display: inline;
     }
 
     /* ── Animations ── */
