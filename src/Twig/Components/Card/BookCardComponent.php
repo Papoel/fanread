@@ -27,7 +27,7 @@ class BookCardComponent
     use ComponentToolsTrait;
 
     /** Champs éditables en live (titre, auteur, pages, etc.). */
-    #[LiveProp(writable: ['pagesRead', 'title', 'author', 'totalPages', 'isbn', 'coverUrl', 'review'])]
+    #[LiveProp(writable: ['pagesRead', 'title', 'author', 'totalPages', 'isbn', 'coverUrl', 'review', 'description'])]
     public Book $book;
 
     /** Catégorie gérée en scalaire (évite l'hydratation enum sur chemin imbriqué). */
@@ -53,6 +53,10 @@ class BookCardComponent
 
     #[LiveProp]
     public string $isbnStatusType = '';
+
+    /** Modale "Description". */
+    #[LiveProp]
+    public bool $showingDescription = false;
 
     public function __construct(
         private readonly Security $security,
@@ -89,10 +93,17 @@ class BookCardComponent
     }
 
     #[LiveAction]
+    public function openDescription(): void
+    {
+        $this->showingDescription = true;
+    }
+
+    #[LiveAction]
     public function closeModals(): void
     {
         $this->editing   = false;
         $this->reviewing = false;
+        $this->showingDescription = false;
     }
 
     #[LiveAction]
@@ -132,6 +143,9 @@ class BookCardComponent
         }
         if ($found->imageUrl) {
             $this->book->setCoverUrl($found->imageUrl);
+        }
+        if (empty($this->book->getDescription()) && null !== ($description = $found->getDescription())) {
+            $this->book->setDescription($description);
         }
 
         $this->setIsbnStatus('success', 'Informations mises à jour. Cliquez sur Enregistrer pour sauvegarder.');

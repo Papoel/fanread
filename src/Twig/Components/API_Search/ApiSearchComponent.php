@@ -78,6 +78,7 @@ class ApiSearchComponent
         $this->fillIfEmpty('author', $found->author);
         $this->fillIfEmpty('coverUrl', $found->imageUrl);
         $this->fillIfEmpty('totalPages', $found->getPageCount());
+        $this->fillIfEmpty('description', $found->getDescription());
 
         $this->setStatus('success', 'Informations trouvées avec succès !');
     }

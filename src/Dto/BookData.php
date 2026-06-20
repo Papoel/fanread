@@ -54,4 +54,22 @@ class BookData
 
         return is_numeric($pageCount) ? (int) $pageCount : null;
     }
+
+    public function getDescription(): ?string
+    {
+        $description = $this->data['description'] ?? null;
+
+        if (!is_string($description) || $description === '') {
+            return null;
+        }
+
+        // Google Books renvoie parfois du HTML (<p>, <br>, <b>...) → on convertit en texte propre.
+        $text = preg_replace('/<\s*br\s*\/?>/i', "\n", $description) ?? $description;
+        $text = preg_replace('/<\/p>/i', "\n\n", $text) ?? $text;
+        $text = strip_tags($text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = trim($text);
+
+        return $text !== '' ? $text : null;
+    }
 }
