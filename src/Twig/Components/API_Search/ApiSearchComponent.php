@@ -42,7 +42,8 @@ class ApiSearchComponent
         private readonly IsbnProviderInterface $isbnProvider,
         private readonly BookServiceInterface $bookService,
         private readonly Security $security,
-    ) {}
+    ) {
+    }
 
     #[PostMount]
     public function postMount(): void
@@ -61,8 +62,9 @@ class ApiSearchComponent
         $rawIsbn = $this->formValues['isbn'] ?? '';
         $isbn = trim(is_string($rawIsbn) ? $rawIsbn : '');
 
-        if ($isbn === '') {
+        if ('' === $isbn) {
             $this->setStatus('error', 'Veuillez entrer un ISBN.');
+
             return;
         }
 
@@ -70,6 +72,7 @@ class ApiSearchComponent
             $found = $this->isbnProvider->getBook($isbn);
         } catch (IsbnApiException) {
             $this->setStatus('error', 'Aucun livre trouvé avec cet ISBN.');
+
             return;
         }
 
@@ -101,7 +104,7 @@ class ApiSearchComponent
 
     private function fillIfEmpty(string $field, int|string|null $value): void
     {
-        if ($value !== null && $value !== '' && empty($this->formValues[$field])) {
+        if (null !== $value && '' !== $value && empty($this->formValues[$field])) {
             $this->formValues[$field] = (string) $value;
         }
     }

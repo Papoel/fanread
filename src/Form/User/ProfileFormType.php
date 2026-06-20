@@ -18,23 +18,23 @@ class ProfileFormType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label'       => 'Prénom',
-                'required'    => false,
+                'label' => 'Prénom',
+                'required' => false,
                 'constraints' => new Length(max: 50),
             ])
             ->add('lastname', TextType::class, [
-                'label'       => 'Nom',
-                'required'    => false,
+                'label' => 'Nom',
+                'required' => false,
                 'constraints' => new Length(max: 50),
             ])
             ->add('pseudo', TextType::class, [
-                'label'       => 'Pseudo',
-                'required'    => false,
+                'label' => 'Pseudo',
+                'required' => false,
                 'constraints' => new Length(max: 50),
-                'help'        => 'Affiché à la place de votre nom si activé ci-dessous.',
+                'help' => 'Affiché à la place de votre nom si activé ci-dessous.',
             ])
             ->add('isPseudoDisplayed', CheckboxType::class, [
-                'label'    => 'Afficher mon pseudo dans l\'application',
+                'label' => 'Afficher mon pseudo dans l\'application',
                 'required' => false,
             ])
         ;

@@ -13,10 +13,11 @@ class BookData
         public readonly ?string $imageUrl = null,
         /** @var array<string, mixed> */
         public readonly array $data = [],
-    ) {}
+    ) {
+    }
 
     /**
-     * Créer une instance depuis les données brutes de l'API
+     * Créer une instance depuis les données brutes de l'API.
      *
      * @param array<string, mixed> $data
      */
@@ -59,7 +60,7 @@ class BookData
     {
         $description = $this->data['description'] ?? null;
 
-        if (!is_string($description) || $description === '') {
+        if (!is_string($description) || '' === $description) {
             return null;
         }
 
@@ -70,6 +71,6 @@ class BookData
         $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $text = trim($text);
 
-        return $text !== '' ? $text : null;
+        return '' !== $text ? $text : null;
     }
 }

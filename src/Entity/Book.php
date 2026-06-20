@@ -135,9 +135,6 @@ class Book
         return $this;
     }
 
-    /**
-     * @return Status
-     */
     public function getStatus(): ?Status
     {
         return $this->status;
@@ -174,9 +171,6 @@ class Book
         return $this;
     }
 
-    /**
-     * @return Category|null
-     */
     public function getCategory(): ?Category
     {
         return $this->category;

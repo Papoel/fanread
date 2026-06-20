@@ -41,21 +41,21 @@ class BookRepository extends ServiceEntityRepository
      * @return list<Book>
      */
     public function findByUserFiltered(
-        User    $user,
-        string  $tab      = 'all',
-        string  $status   = 'all',
-        string  $category = 'all',
-        string  $sort     = 'recent'
+        User $user,
+        string $tab = 'all',
+        string $status = 'all',
+        string $category = 'all',
+        string $sort = 'recent',
     ): array {
         $qb = $this->createQueryBuilder('b')
             ->where('b.user = :user')
             ->setParameter('user', $user);
 
-        if ($tab === 'favorites') {
+        if ('favorites' === $tab) {
             $qb->andWhere('b.isFavorite = true');
         }
 
-        if ($status !== 'all') {
+        if ('all' !== $status) {
             $statusEnum = Status::tryFrom($status);
             if ($statusEnum) {
                 $qb->andWhere('b.status = :status')
@@ -63,7 +63,7 @@ class BookRepository extends ServiceEntityRepository
             }
         }
 
-        if ($category !== 'all') {
+        if ('all' !== $category) {
             $categoryEnum = Category::tryFrom($category);
             if ($categoryEnum) {
                 $qb->andWhere('b.category = :category')
@@ -72,9 +72,9 @@ class BookRepository extends ServiceEntityRepository
         }
 
         match ($sort) {
-            'title'  => $qb->orderBy('b.title', 'ASC'),
+            'title' => $qb->orderBy('b.title', 'ASC'),
             'rating' => $qb->orderBy('b.rating', 'DESC')->addOrderBy('b.addedAt', 'DESC'),
-            default  => $qb->orderBy('b.addedAt', 'DESC'),
+            default => $qb->orderBy('b.addedAt', 'DESC'),
         };
 
         /** @var list<Book> $result */

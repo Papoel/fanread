@@ -6,7 +6,7 @@ use App\Dto\BookData;
 use App\Exception\IsbnApiException;
 
 /**
- * Interface pour les providers ISBN
+ * Interface pour les providers ISBN.
  *
  * Définit le contrat que tous les services de recherche ISBN doivent respecter.
  * Cela permet de basculer entre différents providers (ISBNdb, Google Books, etc.)
@@ -16,13 +16,11 @@ use App\Exception\IsbnApiException;
  * - Dependency Inversion (D - SOLID): Les clients dépendent de cette interface
  * - Interface Segregation (I - SOLID): Interface petite et spécifique
  * - Open/Closed (O - SOLID): Ouvert à l'extension via nouvelles implémentations
- *
- * @package App\Service\Book
  */
 interface IsbnProviderInterface
 {
     /**
-     * Récupère les informations complètes d'un livre par son ISBN
+     * Récupère les informations complètes d'un livre par son ISBN.
      *
      * @param string $isbn L'ISBN du livre à rechercher (format ISBN-10 ou ISBN-13)
      *
@@ -41,7 +39,7 @@ interface IsbnProviderInterface
     public function getBook(string $isbn): BookData;
 
     /**
-     * Valide le format d'un ISBN
+     * Valide le format d'un ISBN.
      *
      * Cette méthode vérifie que l'ISBN est valide sans faire de requête API.
      * Accepte les formats ISBN-10 et ISBN-13, avec ou sans tirets.

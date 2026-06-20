@@ -17,21 +17,21 @@ class ChangePasswordFormType extends AbstractType
     {
         $builder
             ->add('currentPassword', PasswordType::class, [
-                'label'       => 'Mot de passe actuel',
-                'mapped'      => false,
+                'label' => 'Mot de passe actuel',
+                'mapped' => false,
                 'constraints' => [new NotBlank(message: 'Veuillez saisir votre mot de passe actuel.')],
             ])
             ->add('newPassword', PasswordType::class, [
-                'label'       => 'Nouveau mot de passe',
-                'mapped'      => false,
+                'label' => 'Nouveau mot de passe',
+                'mapped' => false,
                 'constraints' => [
                     new NotBlank(message: 'Veuillez saisir un nouveau mot de passe.'),
                     new Length(min: 6, minMessage: 'Minimum {{ limit }} caractères.', max: 4096),
                 ],
             ])
             ->add('confirmPassword', PasswordType::class, [
-                'label'       => 'Confirmer le mot de passe',
-                'mapped'      => false,
+                'label' => 'Confirmer le mot de passe',
+                'mapped' => false,
                 'constraints' => [new NotBlank(message: 'Veuillez confirmer votre mot de passe.')],
             ])
         ;

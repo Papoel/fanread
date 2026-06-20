@@ -21,11 +21,11 @@ class ProfileController extends AbstractController
     #[Route('/profil', name: 'app_profile', methods: ['GET'])]
     public function index(): Response
     {
-        $profileForm        = $this->createForm(ProfileFormType::class, $this->getUser());
+        $profileForm = $this->createForm(ProfileFormType::class, $this->getUser());
         $changePasswordForm = $this->createForm(ChangePasswordFormType::class);
 
         return $this->render('user/profile/index.html.twig', [
-            'profileForm'        => $profileForm,
+            'profileForm' => $profileForm,
             'changePasswordForm' => $changePasswordForm,
         ]);
     }
@@ -51,7 +51,7 @@ class ProfileController extends AbstractController
     public function updatePassword(
         Request $request,
         UserPasswordHasherInterface $hasher,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -62,17 +62,19 @@ class ProfileController extends AbstractController
             /** @var string $current */
             $current = $form->get('currentPassword')->getData();
             /** @var string $new */
-            $new     = $form->get('newPassword')->getData();
+            $new = $form->get('newPassword')->getData();
             /** @var string $confirm */
             $confirm = $form->get('confirmPassword')->getData();
 
             if (!$hasher->isPasswordValid($user, $current)) {
                 $this->addFlash('error_password', 'Le mot de passe actuel est incorrect.');
+
                 return $this->redirectToRoute('app_profile');
             }
 
             if ($new !== $confirm) {
                 $this->addFlash('error_password', 'Les deux mots de passe ne correspondent pas.');
+
                 return $this->redirectToRoute('app_profile');
             }
 

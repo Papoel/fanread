@@ -9,7 +9,7 @@ final class LoginControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
+        $client->request('GET', '/connexion');
 
         self::assertResponseIsSuccessful();
     }

@@ -25,7 +25,9 @@ class ToastComponent
     #[LiveProp]
     public array $toasts = [];
 
-    public function __construct(private readonly RequestStack $requestStack) {}
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
 
     public function mount(): void
     {
@@ -40,9 +42,9 @@ class ToastComponent
         foreach ($flashes as $key => $messages) {
             foreach ($messages as $message) {
                 $this->toasts[] = [
-                    'id'        => uniqid('', true),
-                    'type'      => $this->normalizeType($key),
-                    'message'   => $message,
+                    'id' => uniqid('', true),
+                    'type' => $this->normalizeType($key),
+                    'message' => $message,
                     'createdAt' => time(),
                 ];
             }
@@ -52,10 +54,10 @@ class ToastComponent
     private function normalizeType(string $key): string
     {
         return match (true) {
-            str_contains($key, 'error')   => 'error',
+            str_contains($key, 'error') => 'error',
             str_contains($key, 'success') => 'success',
             str_contains($key, 'warning') => 'warning',
-            default                       => 'info',
+            default => 'info',
         };
     }
 
@@ -63,9 +65,9 @@ class ToastComponent
     public function addToast(#[LiveArg] string $type, #[LiveArg] string $message): void
     {
         $this->toasts[] = [
-            'id'        => uniqid(),
-            'type'      => $type,
-            'message'   => $message,
+            'id' => uniqid(),
+            'type' => $type,
+            'message' => $message,
             'createdAt' => time(),
         ];
     }
@@ -73,7 +75,7 @@ class ToastComponent
     #[LiveAction]
     public function prune(): void
     {
-        $now  = time();
+        $now = time();
         $kept = [];
 
         foreach ($this->toasts as $toast) {

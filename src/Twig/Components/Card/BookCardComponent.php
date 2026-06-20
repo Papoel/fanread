@@ -61,12 +61,13 @@ class BookCardComponent
     public function __construct(
         private readonly Security $security,
         private readonly IsbnProviderInterface $isbnProvider,
-    ) {}
+    ) {
+    }
 
     public function getProgressPercentage(): int
     {
         $total = $this->book->getTotalPages() ?? 0;
-        $read  = $this->book->getPagesRead() ?? 0;
+        $read = $this->book->getPagesRead() ?? 0;
 
         return $total > 0 ? (int) round(min($read / $total * 100, 100)) : 0;
     }
@@ -101,7 +102,7 @@ class BookCardComponent
     #[LiveAction]
     public function closeModals(): void
     {
-        $this->editing   = false;
+        $this->editing = false;
         $this->reviewing = false;
         $this->showingDescription = false;
     }
@@ -114,7 +115,7 @@ class BookCardComponent
         $em->flush();
 
         $this->emit('book:toast', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => 'Note enregistrée.',
         ]);
     }
@@ -125,8 +126,9 @@ class BookCardComponent
         $this->assertOwnership();
 
         $isbn = trim((string) $this->book->getIsbn());
-        if ($isbn === '') {
+        if ('' === $isbn) {
             $this->setIsbnStatus('error', 'Veuillez saisir un ISBN.');
+
             return;
         }
 
@@ -134,11 +136,12 @@ class BookCardComponent
             $found = $this->isbnProvider->getBook($isbn);
         } catch (IsbnApiException) {
             $this->setIsbnStatus('error', 'Aucun livre trouvé avec cet ISBN.');
+
             return;
         }
 
         // Mise à jour des champs depuis l'API
-        if ($found->title !== '' && $found->title !== 'Unknown') {
+        if ('' !== $found->title && 'Unknown' !== $found->title) {
             $this->book->setTitle($found->title);
         }
         if ($found->author) {
@@ -160,7 +163,7 @@ class BookCardComponent
     private function setIsbnStatus(string $type, string $message): void
     {
         $this->isbnStatusType = $type;
-        $this->isbnStatus     = $message;
+        $this->isbnStatus = $message;
     }
 
     #[LiveAction]
@@ -169,7 +172,7 @@ class BookCardComponent
         $this->assertOwnership();
 
         $total = $this->book->getTotalPages() ?? 0;
-        $read  = max(0, $this->book->getPagesRead() ?? 0);
+        $read = max(0, $this->book->getPagesRead() ?? 0);
         if ($total > 0) {
             $read = min($read, $total);
         }
@@ -181,15 +184,15 @@ class BookCardComponent
 
         $this->book->setStatus(match (true) {
             $total > 0 && $read >= $total => Status::Finish,
-            $read > 0                     => Status::InProgress,
-            default                       => Status::NotStarted,
+            $read > 0 => Status::InProgress,
+            default => Status::NotStarted,
         });
 
         $em->flush();
         $this->editing = false;
 
         $this->emit('book:toast', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => 'Livre mis à jour.',
         ]);
     }
@@ -203,7 +206,7 @@ class BookCardComponent
         $this->reviewing = false;
 
         $this->emit('book:toast', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => 'Avis et note enregistrés.',
         ]);
     }
@@ -213,7 +216,7 @@ class BookCardComponent
     {
         $this->assertOwnership();
 
-        $newStatus = $this->book->getStatus() === Status::Finish
+        $newStatus = Status::Finish === $this->book->getStatus()
             ? ($this->book->getPagesRead() > 0 ? Status::InProgress : Status::NotStarted)
             : Status::Finish;
 
@@ -221,13 +224,13 @@ class BookCardComponent
         $em->flush();
 
         $message = match ($newStatus) {
-            Status::Finish     => 'Livre marqué comme terminé !',
+            Status::Finish => 'Livre marqué comme terminé !',
             Status::InProgress => 'Lecture reprise.',
             Status::NotStarted => 'Remis dans la liste de lecture.',
         };
 
         $this->emit('book:toast', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => $message,
         ]);
     }
@@ -255,7 +258,7 @@ class BookCardComponent
         $this->deleted = true;
 
         $this->emit('book:toast', [
-            'type'    => 'warning',
+            'type' => 'warning',
             'message' => 'Livre retiré de votre bibliothèque.',
         ]);
     }
@@ -264,12 +267,10 @@ class BookCardComponent
     {
         /** @var User $currentUser */
         $currentUser = $this->security->getUser();
-        $bookOwner   = $this->book->getUser();
+        $bookOwner = $this->book->getUser();
 
         if (null === $bookOwner || $bookOwner->getId() !== $currentUser->getId()) {
-            throw new AccessDeniedHttpException(
-                'Vous ne pouvez pas modifier un livre qui ne vous appartient pas.'
-            );
+            throw new AccessDeniedHttpException('Vous ne pouvez pas modifier un livre qui ne vous appartient pas.');
         }
     }
 }

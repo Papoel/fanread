@@ -15,7 +15,8 @@ class ApiBookController extends AbstractController
 {
     public function __construct(
         private readonly IsbnProviderInterface $isbnProvider,
-    ) {}
+    ) {
+    }
 
     #[Route('/{isbn}', name: 'show', methods: ['GET'])]
     public function show(string $isbn): Response
@@ -27,7 +28,6 @@ class ApiBookController extends AbstractController
                 $book->toArray(),
                 Response::HTTP_OK
             );
-
         } catch (IsbnApiException $e) {
             return new JsonResponse(
                 [
@@ -36,7 +36,6 @@ class ApiBookController extends AbstractController
                 ],
                 Response::HTTP_BAD_REQUEST
             );
-
         } catch (\Throwable $e) {
             return new JsonResponse(
                 ['error' => 'Une erreur interne s\'est produite'],
@@ -71,7 +70,6 @@ class ApiBookController extends AbstractController
                 $book->toArray(),
                 Response::HTTP_OK
             );
-
         } catch (IsbnApiException $e) {
             return new JsonResponse(
                 ['error' => $e->getMessage()],

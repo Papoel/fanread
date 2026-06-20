@@ -16,11 +16,11 @@ interface BookServiceInterface
 
     /** @return Book[] */
     public function findByUserFiltered(
-        User   $user,
-        string $tab      = 'all',
-        string $status   = 'all',
+        User $user,
+        string $tab = 'all',
+        string $status = 'all',
         string $category = 'all',
-        string $sort     = 'recent'
+        string $sort = 'recent',
     ): array;
 
     public function countByUser(User $user): int;

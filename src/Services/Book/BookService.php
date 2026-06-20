@@ -14,15 +14,16 @@ final class BookService implements BookServiceInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly BookRepository         $bookRepository,
-    ) {}
+        private readonly BookRepository $bookRepository,
+    ) {
+    }
 
     public function create(Book $book, User $user): Book
     {
         $book
             ->setUser($user)
             ->setAddedAt(new \DateTimeImmutable())
-            ->setStatus(Status::InProgress)
+            ->setStatus(Status::NotStarted)
             ->setPagesRead(0)
             ->setRating(0)
             ->setIsFavorite(false);
@@ -39,11 +40,11 @@ final class BookService implements BookServiceInterface
     }
 
     public function findByUserFiltered(
-        User   $user,
-        string $tab      = 'all',
-        string $status   = 'all',
+        User $user,
+        string $tab = 'all',
+        string $status = 'all',
         string $category = 'all',
-        string $sort     = 'recent'
+        string $sort = 'recent',
     ): array {
         return $this->bookRepository->findByUserFiltered($user, $tab, $status, $category, $sort);
     }

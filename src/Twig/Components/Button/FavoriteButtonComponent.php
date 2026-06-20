@@ -24,26 +24,26 @@ class FavoriteButtonComponent
     #[LiveProp]
     public Book $book;
 
-    public function __construct(private readonly Security $security) {}
+    public function __construct(private readonly Security $security)
+    {
+    }
 
     #[LiveAction]
     public function toggle(EntityManagerInterface $em): void
     {
         /** @var User $currentUser */
         $currentUser = $this->security->getUser();
-        $bookOwner   = $this->book->getUser();
+        $bookOwner = $this->book->getUser();
 
         if (null === $bookOwner || $bookOwner->getId() !== $currentUser->getId()) {
-            throw new AccessDeniedHttpException(
-                'Vous ne pouvez pas modifier un livre qui ne vous appartient pas.'
-            );
+            throw new AccessDeniedHttpException('Vous ne pouvez pas modifier un livre qui ne vous appartient pas.');
         }
 
         $this->book->setIsFavorite(!$this->book->isFavorite());
         $em->flush();
 
         $this->emit('book:toast', [
-            'type'    => 'success',
+            'type' => 'success',
             'message' => $this->book->isFavorite()
                 ? 'Ajouté à vos coups de cœur !'
                 : 'Retiré des coups de cœur.',

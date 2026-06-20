@@ -41,7 +41,7 @@ class StatisticsComponent
      */
     private function books(): array
     {
-        if ($this->booksCache !== null) {
+        if (null !== $this->booksCache) {
             return $this->booksCache;
         }
 
@@ -79,7 +79,7 @@ class StatisticsComponent
     #[ExposeInTemplate]
     public function getFavoritesCount(): int
     {
-        return count(array_filter($this->books(), static fn (Book $b): bool => $b->isFavorite() === true));
+        return count(array_filter($this->books(), static fn (Book $b): bool => true === $b->isFavorite()));
     }
 
     #[ExposeInTemplate]
@@ -91,9 +91,9 @@ class StatisticsComponent
     #[ExposeInTemplate]
     public function getAverageRating(): float
     {
-        $rated = array_filter($this->books(), static fn (Book $b): bool => $b->getRating() !== null && $b->getRating() > 0);
+        $rated = array_filter($this->books(), static fn (Book $b): bool => null !== $b->getRating() && $b->getRating() > 0);
 
-        if ($rated === []) {
+        if ([] === $rated) {
             return 0.0;
         }
 
@@ -186,8 +186,8 @@ class StatisticsComponent
 
         foreach ($this->books() as $book) {
             $addedAt = $book->getAddedAt();
-            if ($addedAt !== null && (int) $addedAt->format('Y') === $year) {
-                $months[(int) $addedAt->format('n')]++;
+            if (null !== $addedAt && (int) $addedAt->format('Y') === $year) {
+                ++$months[(int) $addedAt->format('n')];
             }
         }
 
@@ -195,7 +195,7 @@ class StatisticsComponent
         $chart->setData([
             'labels' => ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
             'datasets' => [[
-                'label' => 'Ajouts en ' . $year,
+                'label' => 'Ajouts en '.$year,
                 'data' => array_values($months),
                 'borderColor' => '#f43f5e',
                 'backgroundColor' => 'rgba(244, 63, 94, 0.15)',

@@ -36,9 +36,9 @@ class RegistrationControllerTest extends WebTestCase
         // Register a new user
         $this->client->request('GET', '/inscription');
         self::assertResponseIsSuccessful();
-        self::assertPageTitleContains('Register');
+        self::assertPageTitleContains('FanRead | Inscription');
 
-        $this->client->submitForm('Register', [
+        $this->client->submitForm('Créer mon compte', [
             'registration_form[email]' => 'me@example.com',
             'registration_form[plainPassword]' => 'password',
             'registration_form[agreeTerms]' => true,
@@ -54,10 +54,11 @@ class RegistrationControllerTest extends WebTestCase
         // self::assertQueuedEmailCount(1);
         self::assertEmailCount(1);
 
-        self::assertCount(1, $messages = $this->getMailerMessages());
-        self::assertEmailAddressContains($messages[0], 'from', 'no-reply@fanread.fr');
-        self::assertEmailAddressContains($messages[0], 'to', 'me@example.com');
-        self::assertEmailTextBodyContains($messages[0], 'This link will expire in 1 hour.');
+        $email = self::getMailerMessage(0);
+        self::assertNotNull($email);
+        self::assertEmailAddressContains($email, 'from', 'no-reply@fanread.fr');
+        self::assertEmailAddressContains($email, 'to', 'me@example.com');
+        self::assertEmailHtmlBodyContains($email, 'This link will expire in 1 heure.');
 
         // Login the new user
         $this->client->followRedirect();
@@ -65,7 +66,7 @@ class RegistrationControllerTest extends WebTestCase
 
         // Get the verification link from the email
         /** @var TemplatedEmail $templatedEmail */
-        $templatedEmail = $messages[0];
+        $templatedEmail = $email;
         $messageBody = $templatedEmail->getHtmlBody();
         self::assertIsString($messageBody);
 

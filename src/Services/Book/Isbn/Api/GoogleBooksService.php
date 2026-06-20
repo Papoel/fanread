@@ -46,29 +46,22 @@ class GoogleBooksService implements IsbnProviderInterface
                 ]
             );
 
-            if ($response->getStatusCode() !== 200) {
-                throw IsbnApiException::fromHttpError(
-                    $response->getStatusCode(),
-                    $response->getContent(false)
-                );
+            if (200 !== $response->getStatusCode()) {
+                throw IsbnApiException::fromHttpError($response->getStatusCode(), $response->getContent(false));
             }
 
             $data = $response->toArray();
 
             if (($data['totalItems'] ?? 0) === 0 || empty($data['items'])) {
-                throw new IsbnApiException(
-                    sprintf('Aucun livre trouvé pour l\'ISBN: %s', $isbn)
-                );
+                throw new IsbnApiException(sprintf('Aucun livre trouvé pour l\'ISBN: %s', $isbn));
             }
 
             $this->logger->info('Livre Google Books récupéré', ['isbn' => $isbn]);
 
             $items = $data['items'];
-            $item  = is_array($items) ? ($items[0] ?? null) : null;
+            $item = is_array($items) ? ($items[0] ?? null) : null;
             if (!is_array($item)) {
-                throw new IsbnApiException(
-                    sprintf('Aucun livre trouvé pour l\'ISBN: %s', $isbn)
-                );
+                throw new IsbnApiException(sprintf('Aucun livre trouvé pour l\'ISBN: %s', $isbn));
             }
 
             /** @var array<string, mixed> $volumeInfo */
@@ -76,12 +69,11 @@ class GoogleBooksService implements IsbnProviderInterface
 
             // pageCount souvent absent dans la recherche → on enrichit via la fiche complète
             $volumeId = $item['id'] ?? null;
-            if (empty($volumeInfo['pageCount']) && is_string($volumeId) && $volumeId !== '') {
+            if (empty($volumeInfo['pageCount']) && is_string($volumeId) && '' !== $volumeId) {
                 $volumeInfo = $this->fetchVolumeDetails($volumeId) ?? $volumeInfo;
             }
 
             return $this->mapToBookData($isbn, $volumeInfo);
-
         } catch (\Throwable $e) {
             $this->logger->error('Erreur Google Books', [
                 'isbn' => $isbn,
@@ -122,13 +114,13 @@ class GoogleBooksService implements IsbnProviderInterface
                 Request::METHOD_GET,
                 sprintf('%s/%s', $this->apiUrl, $volumeId),
                 [
-                    'query'   => $query,
+                    'query' => $query,
                     'headers' => ['Accept' => 'application/json'],
                     'timeout' => 10,
                 ]
             );
 
-            if ($response->getStatusCode() !== 200) {
+            if (200 !== $response->getStatusCode()) {
                 return null;
             }
 
@@ -146,9 +138,9 @@ class GoogleBooksService implements IsbnProviderInterface
      */
     private function mapToBookData(string $isbn, array $volumeInfo): BookData
     {
-        $authors    = $volumeInfo['authors'] ?? null;
+        $authors = $volumeInfo['authors'] ?? null;
         $imageLinks = $volumeInfo['imageLinks'] ?? null;
-        $thumbnail  = is_array($imageLinks) ? ($imageLinks['thumbnail'] ?? null) : null;
+        $thumbnail = is_array($imageLinks) ? ($imageLinks['thumbnail'] ?? null) : null;
 
         return new BookData(
             isbn: $isbn,
@@ -169,11 +161,12 @@ class GoogleBooksService implements IsbnProviderInterface
             return false;
         }
         $sum = 0;
-        for ($i = 0; $i < 10; $i++) {
-            $digit = $isbn[$i] === 'X' ? 10 : (int) $isbn[$i];
+        for ($i = 0; $i < 10; ++$i) {
+            $digit = 'X' === $isbn[$i] ? 10 : (int) $isbn[$i];
             $sum += $digit * (10 - $i);
         }
-        return $sum % 11 === 0;
+
+        return 0 === $sum % 11;
     }
 
     private function validateIsbn13(string $isbn): bool
@@ -182,10 +175,11 @@ class GoogleBooksService implements IsbnProviderInterface
             return false;
         }
         $sum = 0;
-        for ($i = 0; $i < 13; $i++) {
-            $weight = ($i % 2 === 0) ? 1 : 3;
+        for ($i = 0; $i < 13; ++$i) {
+            $weight = (0 === $i % 2) ? 1 : 3;
             $sum += (int) $isbn[$i] * $weight;
         }
-        return $sum % 10 === 0;
+
+        return 0 === $sum % 10;
     }
 }

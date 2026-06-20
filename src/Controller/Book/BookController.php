@@ -7,9 +7,7 @@ use App\Entity\User;
 use App\Enum\Book\Category;
 use App\Form\Book\BookFormType;
 use App\Services\Book\BookServiceInterface;
-use App\Services\Book\Isbn\GoogleBooksServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +18,8 @@ final class BookController extends AbstractController
 {
     public function __construct(
         private readonly BookServiceInterface $bookService,
-    ) {}
+    ) {
+    }
 
     #[Route('/books', name: 'app_book', methods: ['GET', 'POST'])]
     public function index(Request $request): Response
@@ -39,28 +38,28 @@ final class BookController extends AbstractController
             return $this->redirectToRoute('app_book');
         }
 
-        $activeTab      = $request->query->get('tab', 'all');
-        $filterStatus   = $request->query->get('status', 'all');
+        $activeTab = $request->query->get('tab', 'all');
+        $filterStatus = $request->query->get('status', 'all');
         $filterCategory = $request->query->get('category', 'all');
-        $sortBy         = $request->query->get('sort', 'recent');
+        $sortBy = $request->query->get('sort', 'recent');
 
         return $this->render('book/index.html.twig', [
-            'bookForm'       => $form,
-            'showForm'       => ($form->isSubmitted() && !$form->isValid())
+            'bookForm' => $form,
+            'showForm' => ($form->isSubmitted() && !$form->isValid())
                 || $request->query->has('showForm'),
-            'activeTab'      => $activeTab,
-            'filterStatus'   => $filterStatus,
+            'activeTab' => $activeTab,
+            'filterStatus' => $filterStatus,
             'filterCategory' => $filterCategory,
-            'sortBy'         => $sortBy,
-            'books'          => $this->bookService->countByUser($user),
-            'sortedBooks'    => $this->bookService->findByUserFiltered(
+            'sortBy' => $sortBy,
+            'books' => $this->bookService->countByUser($user),
+            'sortedBooks' => $this->bookService->findByUserFiltered(
                 $user,
                 $activeTab,
                 $filterStatus,
                 $filterCategory,
                 $sortBy
             ),
-            'categories'     => Category::cases(),
+            'categories' => Category::cases(),
         ]);
     }
 }
