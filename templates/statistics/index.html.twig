@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex flex-col bg-background">
+        {% include 'partials/_navbar.html.twig' %}
+
+        <main class="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="mb-8">
+                <h1 class="font-heading font-bold text-foreground text-3xl md:text-4xl">Mes statistiques de lecture</h1>
+                <p class="text-muted-foreground mt-2">Visualisez l'évolution de votre bibliothèque.</p>
+            </div>
+
+            {{ component('StatisticsComponent') }}
+        </main>
+
+        {% include 'partials/_footer.html.twig' %}
+    </div>
+{% endblock %}
