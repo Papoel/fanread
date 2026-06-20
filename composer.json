@@ -26,6 +26,7 @@
         "symfony/stimulus-bundle": "^3.2",
         "symfony/translation": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
+        "symfony/ux-chartjs": "^3.2",
         "symfony/ux-icons": "^3.2",
         "symfony/ux-live-component": "^3.2",
         "symfony/ux-native": "^3.2",
