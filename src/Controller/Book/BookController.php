@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Book;
 
 use App\Entity\Book;
@@ -8,6 +10,7 @@ use App\Enum\Book\Category;
 use App\Form\Book\BookFormType;
 use App\Services\Book\BookServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,8 +24,20 @@ final class BookController extends AbstractController
     ) {
     }
 
-    #[Route('/books', name: 'app_book', methods: ['GET', 'POST'])]
+    #[Route('/books', name: 'app_book', methods: ['GET'])]
     public function index(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render(
+            'book/index.html.twig',
+            $this->buildViewData($user, $request, $this->createForm(BookFormType::class, new Book()))
+        );
+    }
+
+    #[Route('/books', name: 'app_book_create', methods: ['POST'])]
+    public function create(Request $request): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -38,28 +53,34 @@ final class BookController extends AbstractController
             return $this->redirectToRoute('app_book');
         }
 
+        return $this->render(
+            'book/index.html.twig',
+            $this->buildViewData($user, $request, $form, true)
+        );
+    }
+
+    /** @return array<string, mixed> */
+    private function buildViewData(
+        User $user,
+        Request $request,
+        FormInterface $form,
+        bool $forceShowForm = false,
+    ): array {
         $activeTab = $request->query->get('tab', 'all');
         $filterStatus = $request->query->get('status', 'all');
         $filterCategory = $request->query->get('category', 'all');
         $sortBy = $request->query->get('sort', 'recent');
 
-        return $this->render('book/index.html.twig', [
+        return [
             'bookForm' => $form,
-            'showForm' => ($form->isSubmitted() && !$form->isValid())
-                || $request->query->has('showForm'),
+            'showForm' => $forceShowForm || $request->query->has('showForm'),
             'activeTab' => $activeTab,
             'filterStatus' => $filterStatus,
             'filterCategory' => $filterCategory,
             'sortBy' => $sortBy,
             'books' => $this->bookService->countByUser($user),
-            'sortedBooks' => $this->bookService->findByUserFiltered(
-                $user,
-                $activeTab,
-                $filterStatus,
-                $filterCategory,
-                $sortBy
-            ),
+            'sortedBooks' => $this->bookService->findByUserFiltered($user, $activeTab, $filterStatus, $filterCategory, $sortBy),
             'categories' => Category::cases(),
-        ]);
+        ];
     }
 }

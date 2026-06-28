@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr" style="box-sizing: border-box; margin: 0; padding: 0;">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmez votre adresse email - FanRead</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      @media only screen and (max-width: 600px) {
+        .email-container {
+          border-radius: 0;
+        }
+        .header {
+          padding: 40px 24px;
+        }
+        .content {
+          padding: 32px 24px;
+        }
+        .cta-button {
+          padding: 16px 36px;
+          font-size: 16px;
+        }
+        .footer {
+          padding: 28px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body style="box-sizing: border-box; margin: 0; background-color: #fff7f0; padding: 20px; font-family: Quicksand, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6;">
+    <div class="email-container" style="box-sizing: border-box; padding: 0; background-color: #fff; border-radius: 20px; max-width: 580px; margin: 0 auto; overflow: hidden; box-shadow: 0 20px 60px rgba(225, 29, 72, .1), 0 0 0 1px rgba(225, 29, 72, .05);">
+      <div class="header" style="box-sizing: border-box; margin: 0; text-align: center; background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%); padding: 52px 40px; position: relative; overflow: hidden;">
+        <div
+          style="box-sizing: border-box; padding: 0; z-index: 1; background: rgba(255, 255, 255, .2); border: 3px solid rgba(255, 255, 255, .4); border-radius: 50%; justify-content: center; align-items: center; width: 88px; height: 88px; margin: 0 0 20px; display: inline-flex; position: relative; box-shadow: 0 10px 40px rgba(0, 0, 0, .15);"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="box-sizing: border-box; margin: 0; padding: 0; fill: #fff; width: 44px; height: 44px;">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" style="box-sizing: border-box; margin: 0; padding: 0;"></path>
+          </svg>
+        </div>
+        <h1 style="box-sizing: border-box; padding: 0; color: #fff; letter-spacing: -.3px; z-index: 1; margin: 0 0 6px; font-family: Outfit, sans-serif; font-size: 28px; font-weight: 800; position: relative;">FanRead</h1>
+        <p style="box-sizing: border-box; padding: 0; color: rgba(255, 255, 255, .88); z-index: 1; margin: 0; font-size: 15px; position: relative;">Confirmez votre adresse email ✉️</p>
+      </div>
+      <div class="content" style="box-sizing: border-box; margin: 0; padding: 48px 40px;">
+        <p style="box-sizing: border-box; padding: 0; color: #9d7b86; text-align: center; margin: 0 0 36px; font-size: 16px; line-height: 1.8;">
+          Vous êtes à
+          <strong style="box-sizing: border-box; margin: 0; padding: 0; color: #5c3d47; font-weight: 700;">une étape</strong>
+          de rejoindre votre cocon littéraire.
+          <br style="box-sizing: border-box; margin: 0; padding: 0;">
+          Cliquez sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte.
+        </p>
+        <div style="box-sizing: border-box; padding: 0; text-align: center; margin: 0 0 36px;">
+          <a
+            href="{{ signedUrl|raw }}"
+            class="cta-button"
+            style="box-sizing: border-box; margin: 0; color: #fff; letter-spacing: .3px; background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); border-radius: 14px; padding: 18px 56px; font-family: Outfit, sans-serif; font-size: 17px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 10px 30px rgba(225, 29, 72, .35);"
+          >
+            ✅ Confirmer mon email
+          </a>
+          <p style="box-sizing: border-box; padding: 0; color: #9d7b86; text-align: center; margin: 20px 0 0; font-size: 13px;">
+            Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :
+            <br style="box-sizing: border-box; margin: 0; padding: 0;">
+            <a href="{{ signedUrl|raw }}" style="box-sizing: border-box; margin: 0; padding: 0; color: #e11d48; word-break: break-all; font-size: 12px;">{{ signedUrl|raw }}</a>
+          </p>
+        </div>
+        <div style="box-sizing: border-box; text-align: center; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border: 1px solid #ddd6fe; border-radius: 14px; margin: 0 0 28px; padding: 20px 24px;">
+          <p style="box-sizing: border-box; padding: 0; color: #7c5db0; margin: 0; font-size: 14px; line-height: 1.6;">
+            ⏳
+            <strong style="box-sizing: border-box; margin: 0; padding: 0; color: #5c3d47;">Ce lien expirera dans :</strong>
+            <br style="box-sizing: border-box; margin: 0; padding: 0;">
+            {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}
+          </p>
+        </div>
+        <div style="box-sizing: border-box; background: #fff7f0; border: 1px solid #f0dce3; border-radius: 12px; margin: 0; padding: 18px 24px;">
+          <p style="box-sizing: border-box; padding: 0; color: #9d7b86; margin: 0; font-size: 13px; line-height: 1.6;">
+            🔒 Si vous n'avez pas créé de compte sur
+            <strong style="box-sizing: border-box; margin: 0; padding: 0;">FanRead</strong>
+            , vous pouvez ignorer cet email en toute sécurité. Aucune action n'est requise.
+          </p>
+        </div>
+      </div>
+      <div class="footer" style="box-sizing: border-box; margin: 0; text-align: center; background: linear-gradient(#fff7f0 0%, #fff1f2 100%); border-top: 1px solid #f0dce3; padding: 32px 40px;">
+        <p style="box-sizing: border-box; padding: 0; font-family: Outfit, sans-serif; font-weight: 800; color: #9d7b86; margin: 0 0 4px; font-size: 13px;">❤️ FanRead</p>
+        <p style="box-sizing: border-box; padding: 0; color: #9d7b86; margin: 0 0 4px; font-size: 13px;">Votre compagnon de lecture personnel</p>
+        <p style="box-sizing: border-box; padding: 0; color: #9d7b86; margin: 0 0 4px; font-size: 13px;">papoel.dev@gmail.com</p>
+        <p style="box-sizing: border-box; padding: 0; color: #9d7b86; margin: 16px 0 4px; font-size: 13px;">Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+      </div>
+    </div>
+  </body>
+</html>
