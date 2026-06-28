@@ -6,6 +6,7 @@ namespace App\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -17,22 +18,20 @@ class ChangePasswordFormType extends AbstractType
     {
         $builder
             ->add('currentPassword', PasswordType::class, [
-                'label' => 'Mot de passe actuel',
-                'mapped' => false,
+                'label'       => 'Mot de passe actuel',
+                'mapped'      => false,
                 'constraints' => [new NotBlank(message: 'Veuillez saisir votre mot de passe actuel.')],
             ])
-            ->add('newPassword', PasswordType::class, [
-                'label' => 'Nouveau mot de passe',
-                'mapped' => false,
-                'constraints' => [
+            ->add('newPassword', RepeatedType::class, [
+                'type'            => PasswordType::class,
+                'mapped'          => false,
+                'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
+                'first_options'   => ['label' => 'Nouveau mot de passe'],
+                'second_options'  => ['label' => 'Confirmer le mot de passe'],
+                'constraints'     => [
                     new NotBlank(message: 'Veuillez saisir un nouveau mot de passe.'),
                     new Length(min: 6, minMessage: 'Minimum {{ limit }} caractères.', max: 4096),
                 ],
-            ])
-            ->add('confirmPassword', PasswordType::class, [
-                'label' => 'Confirmer le mot de passe',
-                'mapped' => false,
-                'constraints' => [new NotBlank(message: 'Veuillez confirmer votre mot de passe.')],
             ])
         ;
     }

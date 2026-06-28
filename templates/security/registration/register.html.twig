@@ -136,6 +136,36 @@
                 }
             }) }}
 
+                {# ── Champ Prénom ── #}
+                <div>
+                    {{ form_label(registrationForm.firstname, 'Prénom', {
+                        label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                    }) }}
+                    {{ form_widget(registrationForm.firstname, {
+                        attr: {
+                            class: 'w-full px-4 py-3 rounded-xl border text-sm font-body text-foreground bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0',
+                            style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                            placeholder: 'Bruce'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.firstname) }}
+                </div>
+
+                {# ── Champ Nom ── #}
+                <div>
+                    {{ form_label(registrationForm.lastname, 'Nom', {
+                        label_attr: { class: 'block text-sm font-semibold text-foreground mb-1.5' }
+                    }) }}
+                    {{ form_widget(registrationForm.lastname, {
+                        attr: {
+                            class: 'w-full px-4 py-3 rounded-xl border text-sm font-body text-foreground bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0',
+                            style: 'border-color: hsl(var(--border)); --tw-ring-color: hsl(var(--primary) / 0.35);',
+                            placeholder: 'Wayne'
+                        }
+                    }) }}
+                    {{ form_errors(registrationForm.lastname) }}
+                </div>
+
 				{# ── Champ Email ── #}
 				<div>
 					{{ form_label(registrationForm.email, 'Adresse email', {

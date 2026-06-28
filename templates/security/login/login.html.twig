@@ -121,11 +121,13 @@
 				{# ── Formulaire ── #}
 				{# Le POST est intercepté par form_login de Symfony (check_path: app_login) #}
 				<form
-					method="post" action="{{ path('app_login') }}" class="space-y-5">
+					method="post" action="{{ path('app_login') }}" class="space-y-5"
+                    data-turbo="false">
 
 					{# Token CSRF #}
-					<input
-					type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <input
+                        type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"
+                        data-controller="csrf-protection">
 
 					{# ── Champ Email ── #}
 					<div>
