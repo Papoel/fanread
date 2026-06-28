@@ -20,7 +20,8 @@ class RegistrationService implements RegistrationServiceInterface
         private EntityManagerInterface $em,
         private EmailVerifier $emailVerifier,
         private EmailService $emailService,
-    ) {}
+    ) {
+    }
 
     public function register(User $user, string $plainPassword): void
     {

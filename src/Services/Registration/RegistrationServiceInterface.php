@@ -10,5 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 interface RegistrationServiceInterface
 {
     public function register(User $user, string $plainPassword): void;
+
     public function verifyEmail(Request $request, User $user): void;
 }

@@ -13,7 +13,8 @@ final class ProfileService implements ProfileServiceInterface
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $passwordHasher,
-    ) {}
+    ) {
+    }
 
     public function updateInfo(User $user): void
     {

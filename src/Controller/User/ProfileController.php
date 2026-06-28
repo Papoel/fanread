@@ -19,13 +19,14 @@ class ProfileController extends AbstractController
 {
     public function __construct(
         private readonly ProfileServiceInterface $profileService,
-    ) {}
+    ) {
+    }
 
     #[Route('/profil', name: 'app_profile', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render('user/profile/index.html.twig', [
-            'profileForm'        => $this->createForm(ProfileFormType::class, $this->getUser()),
+            'profileForm' => $this->createForm(ProfileFormType::class, $this->getUser()),
             'changePasswordForm' => $this->createForm(ChangePasswordFormType::class),
         ]);
     }
@@ -56,12 +57,12 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->profileService->updatePassword(
-                    $user,
-                    (string) $form->get('currentPassword')->getData(),
-                    (string) $form->get('newPassword')->getData(),
-                );
-                $this->addFlash('success_password', 'Votre mot de passe a été modifié avec succès.');
+                /** @var string $currentPassword */
+                $currentPassword = $form->get('currentPassword')->getData();
+                /** @var string $newPassword */
+                $newPassword = $form->get('newPassword')->getData();
+
+                $this->profileService->updatePassword($user, $currentPassword, $newPassword);
             } catch (\InvalidArgumentException $e) {
                 $this->addFlash('error_password', $e->getMessage());
             }

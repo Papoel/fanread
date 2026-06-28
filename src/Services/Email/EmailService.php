@@ -18,13 +18,13 @@ class EmailService
     }
 
     /**
-     * Envoie un email avec un template Twig
+     * Envoie un email avec un template Twig.
      *
-     * @param string $to Adresse email du destinataire
-     * @param string $subject Sujet de l'email
-     * @param string $template Chemin du template (ex: 'emails/welcome.html')
-     * @param array<string, mixed> $context Variables à passer au template
-     * @param string|null $toName Nom du destinataire (optionnel)
+     * @param string               $to       Adresse email du destinataire
+     * @param string               $subject  Sujet de l'email
+     * @param string               $template Chemin du template (ex: 'emails/welcome.html')
+     * @param array<string, mixed> $context  Variables à passer au template
+     * @param string|null          $toName   Nom du destinataire (optionnel)
      *
      * @throws TransportExceptionInterface
      */
@@ -50,11 +50,10 @@ class EmailService
     }
 
     /**
-     * Envoie un email de bienvenue à un nouvel utilisateur
+     * Envoie un email de bienvenue à un nouvel utilisateur.
      *
-     * @param string $to Adresse email du destinataire
+     * @param string $to        Adresse email du destinataire
      * @param string $firstname Prénom de l'utilisateur
-     * @param string $shopUrl URL de la boutique
      *
      * @throws TransportExceptionInterface
      */
@@ -72,11 +71,11 @@ class EmailService
     }
 
     /**
-     * Envoie un email de réinitialisation de mot de passe
+     * Envoie un email de réinitialisation de mot de passe.
      *
-     * @param string $to Adresse email du destinataire
+     * @param string $to        Adresse email du destinataire
      * @param string $firstname Prénom de l'utilisateur
-     * @param string $lastname Nom de l'utilisateur
+     * @param string $lastname  Nom de l'utilisateur
      * @param string $resetLink Lien de réinitialisation
      *
      * @throws TransportExceptionInterface

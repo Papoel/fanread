@@ -9,5 +9,6 @@ use App\Entity\User;
 interface ProfileServiceInterface
 {
     public function updateInfo(User $user): void;
+
     public function updatePassword(User $user, string $currentPassword, string $newPassword): void;
 }

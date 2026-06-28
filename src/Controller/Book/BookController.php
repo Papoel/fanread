@@ -59,27 +59,28 @@ final class BookController extends AbstractController
         );
     }
 
+    /** @return array<string, mixed> */
     private function buildViewData(
         User $user,
         Request $request,
         FormInterface $form,
         bool $forceShowForm = false,
     ): array {
-        $activeTab      = $request->query->get('tab', 'all');
-        $filterStatus   = $request->query->get('status', 'all');
+        $activeTab = $request->query->get('tab', 'all');
+        $filterStatus = $request->query->get('status', 'all');
         $filterCategory = $request->query->get('category', 'all');
-        $sortBy         = $request->query->get('sort', 'recent');
+        $sortBy = $request->query->get('sort', 'recent');
 
         return [
-            'bookForm'       => $form,
-            'showForm'       => $forceShowForm || $request->query->has('showForm'),
-            'activeTab'      => $activeTab,
-            'filterStatus'   => $filterStatus,
+            'bookForm' => $form,
+            'showForm' => $forceShowForm || $request->query->has('showForm'),
+            'activeTab' => $activeTab,
+            'filterStatus' => $filterStatus,
             'filterCategory' => $filterCategory,
-            'sortBy'         => $sortBy,
-            'books'          => $this->bookService->countByUser($user),
-            'sortedBooks'    => $this->bookService->findByUserFiltered($user, $activeTab, $filterStatus, $filterCategory, $sortBy),
-            'categories'     => Category::cases(),
+            'sortBy' => $sortBy,
+            'books' => $this->bookService->countByUser($user),
+            'sortedBooks' => $this->bookService->findByUserFiltered($user, $activeTab, $filterStatus, $filterCategory, $sortBy),
+            'categories' => Category::cases(),
         ];
     }
 }
