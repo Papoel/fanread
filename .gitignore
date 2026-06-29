@@ -34,5 +34,5 @@ phpstan.neon
 ###< friendsofphp/php-cs-fixer ###
 
 ###> Maizzle emails ###
-.maizzle_emails/
+#.maizzle_emails/
 ###< Maizzle emails ###
