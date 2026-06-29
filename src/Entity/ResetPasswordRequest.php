@@ -34,6 +34,6 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
 
     public function getUser(): User
     {
-        return $this->user;
+        return $this->user ?? throw new \LogicException('Utilisateur non défini');
     }
 }
