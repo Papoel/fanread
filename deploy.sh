@@ -1,26 +1,42 @@
 #!/bin/bash
-set -e
+set -euo pipefail  # arrête au moindre problème + variables non définies
 
 PROJECT="/var/www/sites/fanread"
-echo "Deploiement demarre - $(date)"
+USER="papoel"
 
-cd $PROJECT
+echo "🚀 Déploiement démarré - $(date)"
 
-# Force la synchronisation avec GitHub sans conflits
+cd "$PROJECT"
+
+# --- 1. Synchronisation avec GitHub ---
+echo "📥 Récupération du code..."
 git fetch origin
 git reset --hard origin/main
 
-composer install --no-dev --optimize-autoloader
+# --- 2. Dépendances ---
+echo "📦 Installation des dépendances..."
+composer install --no-dev --optimize-autoloader --no-interaction
 composer dump-env prod
 
-php bin/console cache:clear --env=prod
+# --- 3. Cache & Assets ---
+echo "🧹 Nettoyage du cache..."
+php bin/console cache:clear --env=prod --no-debug
 php bin/console cache:warmup --env=prod
+
+echo "🎨 Compilation des assets..."
 php bin/console asset-map:compile
 
-sudo chown -R papoel:www-data $PROJECT
-sudo chmod -R 775 $PROJECT
-sudo chmod -R 777 $PROJECT/var
+# --- 4. Migrations base de données (optionnel mais recommandé) ---
+echo "🗄️  Migrations..."
+php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
+# --- 5. Permissions ---
+echo "🔒 Réglage des permissions..."
+sudo chown -R "$USER:www-data" "$PROJECT"
+sudo chmod -R 775 "$PROJECT/var"
+
+# --- 6. Redémarrage services ---
+echo "🔄 Redémarrage des services..."
 sudo systemctl restart cloudflared
 
-echo "Deploiement termine - $(date)"
+echo "✅ Déploiement terminé - $(date)"
