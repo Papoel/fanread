@@ -1,33 +1,26 @@
 #!/bin/bash
-set -euo pipefail
+set -e
 
-PROJECT="$(cd "$(dirname "$0")" && pwd)"  # 👈 auto-détecte le dossier
-USER="papoel"
+PROJECT="/var/www/sites/raspberry"
+echo "Deploiement demarre - $(date)"
 
-echo "🚀 Déploiement de ${PROJECT} - $(date)"
+cd $PROJECT
 
-cd "$PROJECT"
-
-echo "📥 Récupération du code..."
+# Force la synchronisation avec GitHub sans conflits
 git fetch origin
 git reset --hard origin/main
 
-echo "📦 Dépendances..."
-composer install --no-dev --optimize-autoloader --no-interaction
+composer install --no-dev --optimize-autoloader
 composer dump-env prod
 
-echo "🧹 Cache & assets..."
-php bin/console cache:clear --env=prod --no-debug
+php bin/console cache:clear --env=prod
+php bin/console cache:warmup --env=prod
 php bin/console asset-map:compile
 
-echo "🗄️  Migrations..."
-php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+sudo chown -R papoel:www-data $PROJECT
+sudo chmod -R 775 $PROJECT
+sudo chmod -R 777 $PROJECT/var
 
-echo "🔒 Permissions..."
-sudo chown -R "$USER:www-data" "$PROJECT"
-sudo chmod -R 775 "$PROJECT/var"
+sudo systemctl restart cloudflared
 
-echo "🔄 Rechargement Apache..."
-sudo systemctl reload apache2
-
-echo "✅ Déploiement terminé - $(date)"
+echo "Deploiement termine - $(date)"
