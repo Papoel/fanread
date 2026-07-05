@@ -54,7 +54,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $email = self::getMailerMessage(0);
         self::assertNotNull($email);
-        self::assertEmailAddressContains($email, 'from', 'no-reply@fanread.fr');
+        self::assertEmailAddressContains($email, 'from', 'bot@fanread.papoel.fr');
         self::assertEmailAddressContains($email, 'to', 'me@example.com');
 
         $this->client->followRedirect();

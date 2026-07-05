@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Email;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
 class EmailService
 {
-    private const FROM_EMAIL = 'bot@fanread.fr';
+    private const FROM_EMAIL = 'bot@fanread.papoel.fr';
 
     public function __construct(
         private readonly MailerInterface $mailer,

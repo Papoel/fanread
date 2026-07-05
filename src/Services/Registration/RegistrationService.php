@@ -15,6 +15,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationService implements RegistrationServiceInterface
 {
+    private const FROM_EMAIL = 'bot@fanread.papoel.fr';
+
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
         private EntityManagerInterface $em,
@@ -34,7 +36,7 @@ class RegistrationService implements RegistrationServiceInterface
             'app_verify_email',
             $user,
             (new TemplatedEmail())
-                ->from(new Address('no-reply@fanread.fr', 'FanRead Email Bot'))
+                ->from(new Address(self::FROM_EMAIL, 'FanRead Email Bot'))
                 ->to((string) $user->getEmail())
                 ->subject('Confirmez votre adresse email')
                 ->htmlTemplate('emails/confirmation_email.html')
