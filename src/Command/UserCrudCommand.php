@@ -66,6 +66,7 @@ class UserCrudCommand extends Command
 
                 return Command::INVALID;
             }
+            /** @var string $action */
             $action = $io->choice('Que veux-tu faire ?', self::ACTIONS, 'list');
         }
 
@@ -116,7 +117,7 @@ class UserCrudCommand extends Command
     {
         $io->title('Création d\'un utilisateur');
 
-        $email = $this->askEmail($input, $io);
+        $email = $this->askEmail($io);
         if (null === $email) {
             return Command::FAILURE;
         }
@@ -127,7 +128,7 @@ class UserCrudCommand extends Command
             return Command::FAILURE;
         }
 
-        $plainPassword = $this->askPassword($input, $io, 'Mot de passe');
+        $plainPassword = $this->askPassword($io, 'Mot de passe');
         if (null === $plainPassword) {
             return Command::FAILURE;
         }
@@ -137,9 +138,9 @@ class UserCrudCommand extends Command
         $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
 
         if ($input->isInteractive()) {
-            $user->setFirstname($io->ask('Prénom', null));
-            $user->setLastname($io->ask('Nom', null));
-            $user->setPseudo($io->ask('Pseudo', null));
+            $user->setFirstname($this->askString($io, 'Prénom'));
+            $user->setLastname($this->askString($io, 'Nom'));
+            $user->setPseudo($this->askString($io, 'Pseudo'));
             $user->setRoles($this->askRoles($io, $user->getRoles()));
             $user->setIsPseudoDisplayed($io->confirm('Afficher le pseudo publiquement ?', false));
             $user->setIsVerified($io->confirm('Compte déjà vérifié ?', true));
@@ -166,6 +167,7 @@ class UserCrudCommand extends Command
             'show' => $this->showUser($user, $io),
             'update' => $this->updateUser($user, $input, $io),
             'delete' => $this->deleteUser($user, $input, $io),
+            default => throw new \InvalidArgumentException(sprintf('Action "%s" non supportée.', $action)),
         };
     }
 
@@ -199,7 +201,7 @@ class UserCrudCommand extends Command
         $io->title(sprintf('Mise à jour de "%s"', $user->getEmail()));
         $io->note('Laisse vide pour conserver la valeur actuelle.');
 
-        $email = $io->ask('Email', $user->getEmail());
+        $email = $this->askString($io, 'Email', $user->getEmail());
         if (null !== $email && '' !== trim($email)) {
             $email = trim($email);
             if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
@@ -218,14 +220,14 @@ class UserCrudCommand extends Command
             $user->setEmail($email);
         }
 
-        $user->setFirstname($io->ask('Prénom', $user->getFirstname()));
-        $user->setLastname($io->ask('Nom', $user->getLastname()));
-        $user->setPseudo($io->ask('Pseudo', $user->getPseudo()));
+        $user->setFirstname($this->askString($io, 'Prénom', $user->getFirstname()));
+        $user->setLastname($this->askString($io, 'Nom', $user->getLastname()));
+        $user->setPseudo($this->askString($io, 'Pseudo', $user->getPseudo()));
         $user->setRoles($this->askRoles($io, $user->getRoles()));
         $user->setIsPseudoDisplayed($io->confirm('Afficher le pseudo publiquement ?', (bool) $user->isPseudoDisplayed()));
         $user->setIsVerified($io->confirm('Compte vérifié ?', $user->isVerified()));
 
-        $plainPassword = $this->askPassword($input, $io, 'Nouveau mot de passe (vide = inchangé)', required: false);
+        $plainPassword = $this->askPassword($io, 'Nouveau mot de passe (vide = inchangé)', required: false);
         if (null !== $plainPassword) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
         }
@@ -316,10 +318,17 @@ class UserCrudCommand extends Command
         return $this->userRepository->findOneBy(['email' => $email]);
     }
 
-    private function askEmail(InputInterface $input, SymfonyStyle $io): ?string
+    private function askString(SymfonyStyle $io, string $question, ?string $default = null): ?string
     {
-        $email = (string) $io->ask('Email', null, static function (?string $value): string {
-            $value = trim((string) $value);
+        $answer = $io->ask($question, $default);
+
+        return \is_string($answer) ? $answer : $default;
+    }
+
+    private function askEmail(SymfonyStyle $io): ?string
+    {
+        $email = $io->ask('Email', null, static function (mixed $value): string {
+            $value = trim(\is_string($value) ? $value : '');
             if (!filter_var($value, \FILTER_VALIDATE_EMAIL)) {
                 throw new \RuntimeException('Adresse email invalide.');
             }
@@ -327,13 +336,14 @@ class UserCrudCommand extends Command
             return $value;
         });
 
-        return '' !== $email ? $email : null;
+        return \is_string($email) && '' !== $email ? $email : null;
     }
 
-    private function askPassword(InputInterface $input, SymfonyStyle $io, string $question, bool $required = true): ?string
+    private function askPassword(SymfonyStyle $io, string $question, bool $required = true): ?string
     {
-        return $io->askHidden($question, function (?string $value) use ($required): ?string {
-            $value = (string) $value;
+        /** @var string|null $password */
+        $password = $io->askHidden($question, static function (mixed $value) use ($required): ?string {
+            $value = \is_string($value) ? $value : '';
 
             if ('' === $value) {
                 if ($required) {
@@ -349,16 +359,19 @@ class UserCrudCommand extends Command
 
             return $value;
         });
+
+        return $password;
     }
 
     /**
-     * @param list<string> $currentRoles
+     * @param array<string> $currentRoles
      *
      * @return list<string>
      */
     private function askRoles(SymfonyStyle $io, array $currentRoles): array
     {
-        $answer = (string) $io->ask('Rôles (séparés par des virgules)', implode(',', $currentRoles));
+        $answer = $io->ask('Rôles (séparés par des virgules)', implode(',', $currentRoles));
+        $answer = \is_string($answer) ? $answer : '';
 
         $roles = array_values(array_unique(array_filter(array_map(
             static fn (string $role): string => strtoupper(trim($role)),
